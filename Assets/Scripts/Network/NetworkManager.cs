@@ -10,7 +10,7 @@ public class NetworkManager : Photon.MonoBehaviour
     private TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     private RoomInfo[] roomsList;
     public GameObject player;
-    public Camera standbyCamera;
+    public GameObject standbyCamera;
 
     
     //Map sync
@@ -91,7 +91,7 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         Debug.Log("Connected to Room");
         //CREATE SPAWN POINTS
-        standbyCamera.enabled = false;
+        standbyCamera.SetActive(false);
         Vector3 initialSpawnPoint = new Vector3((-worldGen.GetComponent<MazeGenerator>().Width / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2, 0.0f, (-worldGen.GetComponent<MazeGenerator>().Height / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2);
         initialSpawnPoint += new Vector3(-1f, worldGen.GetComponent<MazeGenerator>().wallLength, 0f);
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti

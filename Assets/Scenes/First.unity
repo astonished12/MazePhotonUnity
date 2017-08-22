@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1076647746130410, guid: 85411dc5bb0b98d4eb755fe0e1986e84, type: 2}
-  standbyCamera: {fileID: 255279013}
+  standbyCamera: {fileID: 255279008}
   worldGen: {fileID: 2050678260}
 --- !u!1 &1752119403
 GameObject:
