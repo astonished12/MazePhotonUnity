@@ -97,6 +97,8 @@ public class NetworkManager : Photon.MonoBehaviour
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
         myPlayer.GetComponent<FirstPersonController>().enabled = true;
+        myPlayer.GetComponent<PlayerMovement>().enabled = true;
+
         //AM MODIFICAT CEVA
     }
 }

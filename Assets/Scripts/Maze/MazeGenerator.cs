@@ -74,7 +74,7 @@ public class MazeGenerator : MonoBehaviour {
 
             }
         }
-        wallHolder.transform.position += new Vector3(0f, wallLength, 0f);
+        wallHolder.transform.position += new Vector3(0f, wallLength-1.5f, 0f);
 
         CreateCells(_seed);
     }
