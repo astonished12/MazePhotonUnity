@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cf9205532c9afe42b8339d6309f4c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1902737691704968, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
+  player: {fileID: 1907112278183520, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
   standbyCamera: {fileID: 255279008}
   worldGen: {fileID: 2050678260}
 --- !u!1 &2050678260
