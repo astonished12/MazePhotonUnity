@@ -228,6 +228,68 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &781224862
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 781224865}
+  - component: {fileID: 781224864}
+  - component: {fileID: 781224863}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &781224863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 781224862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &781224864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 781224862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 5
+--- !u!4 &781224865
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 781224862}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &876347098
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,8 +480,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cf9205532c9afe42b8339d6309f4c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1907112278183520, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
+  player: {fileID: 1646183883853446, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
   standbyCamera: {fileID: 255279008}
+  offlinemode: 0
   worldGen: {fileID: 2050678260}
 --- !u!1 &2050678260
 GameObject:
@@ -465,10 +528,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Height: 7
   Width: 7
-  Wall: {fileID: 1005926454529314, guid: 62d4aceb9a4ec7540928da1e273f1add, type: 2}
-  WallY: {fileID: 1005926454529314, guid: 62d4aceb9a4ec7540928da1e273f1add, type: 2}
+  Wall: {fileID: 1619283389909698, guid: 62d4aceb9a4ec7540928da1e273f1add, type: 2}
+  WallRoof: {fileID: 1107508077669834, guid: 6801a2b9c3cb5ff49839e1ce1b03c2f9, type: 2}
   cells: []
-  wallLength: 3
+  wallLength: 6
   masterClient: {fileID: 1375314546}
   realSeed: 0
 --- !u!114 &2050678263

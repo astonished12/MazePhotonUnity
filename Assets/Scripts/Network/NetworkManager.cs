@@ -12,6 +12,7 @@ public class NetworkManager : Photon.MonoBehaviour
     public GameObject player;
     public GameObject standbyCamera;
 
+    public bool offlinemode = false;
     
     //Map sync
     bool sent;
@@ -20,10 +21,21 @@ public class NetworkManager : Photon.MonoBehaviour
 
     void Start()
     {
-        PhotonNetwork.ConnectUsingSettings("v4.2");
-    }   
+        Connect();
+    }
 
-   
+    public void Connect()
+    {
+        if (offlinemode)
+        {
+            PhotonNetwork.offlineMode = true;
+            OnJoinedLobby();
+        }
+        else
+        {
+            PhotonNetwork.ConnectUsingSettings("v4.2");
+        }
+    }
     public GameObject worldGen;
 
 
@@ -92,9 +104,10 @@ public class NetworkManager : Photon.MonoBehaviour
         Debug.Log("Connected to Room");
         //CREATE SPAWN POINTS
         standbyCamera.SetActive(false);
-        Vector3 initialSpawnPoint = new Vector3((-worldGen.GetComponent<MazeGenerator>().Width / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2, 0.0f, (-worldGen.GetComponent<MazeGenerator>().Height / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2);
+        Vector3 initialSpawnPoint = new Vector3((-worldGen.GetComponent<MazeGenerator>().Width / 2+1f) + worldGen.GetComponent<MazeGenerator>().wallLength / 2, 0.0f, (-worldGen.GetComponent<MazeGenerator>().Height / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2);
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
+        myPlayer.transform.Find("Crosshair").gameObject.SetActive(true);
         myPlayer.GetComponent<FirstPersonController>().enabled = true;
         myPlayer.GetComponent<PlayerMovement>().enabled = true;
         myPlayer.GetComponent<NetworkCharacter>().enabled = true;

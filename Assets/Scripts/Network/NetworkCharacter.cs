@@ -6,6 +6,7 @@ public class NetworkCharacter : Photon.PunBehaviour {
     Vector3 realPositon = Vector3.zero;
     Quaternion realRotation = Quaternion.identity;
     Animator myAnimator;
+
     float moveFlow = 0.1f;
     // Use this for initialization
     void Start () {
@@ -20,7 +21,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
 	void Update () {
         if (photonView.isMine) // do nothing our characer inputs is moving us
         {
-
+            if (Input.GetKeyDown(KeyCode.R))
+                GetComponent<PhotonView>().RPC("SpawnHelper", PhotonTargets.All,transform.position);
         }
         else
         {
