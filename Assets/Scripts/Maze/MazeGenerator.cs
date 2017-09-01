@@ -58,7 +58,7 @@ public class MazeGenerator : MonoBehaviour {
         GameObject temp;
         int index = 0;
 
-        for (int i = 0; i < Height; i++) // acoperis
+        /*for (int i = 0; i < Height; i++) // acoperis
         {
             for (int j = 0; j < Width; j++)
             {
@@ -66,7 +66,7 @@ public class MazeGenerator : MonoBehaviour {
                 temp = Instantiate(WallRoof, myPostion, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
                 temp.transform.parent = roof.transform;
             }
-        }
+        }*/
 
         for (int i = 0; i < Height; i++) // pe linii -- x
         {
