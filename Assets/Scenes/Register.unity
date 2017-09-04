@@ -419,6 +419,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 842244076}
     m_Modifications:
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 22459314, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -510,6 +514,26 @@ Prefab:
     - target: {fileID: 117722, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
       propertyPath: m_Name
       value: Confirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 842244080}
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RegisterUser
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
@@ -867,7 +891,7 @@ MonoBehaviour:
   usernameField: {fileID: 1718859376}
   emailField: {fileID: 507426015}
   passwordField: {fileID: 1557837606}
-  messageAlert: {fileID: 1595279207779270, guid: 5f5af3ce3966882468cd14ff204ff043,
+  messageAlert: {fileID: 1007364961351692, guid: 5f5af3ce3966882468cd14ff204ff043,
     type: 2}
 --- !u!1 &1400486211
 GameObject:
@@ -1112,6 +1136,14 @@ Prefab:
     - target: {fileID: 11476044, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
       propertyPath: m_FontData.m_MinSize
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11459528, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
+      propertyPath: m_ContentType
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 11459528, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
+      propertyPath: m_InputType
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}

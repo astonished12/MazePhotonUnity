@@ -15,10 +15,9 @@ public class Register : MonoBehaviour {
     private string Username;
     private string Email;
     private string Password;
-    private string form;
 
     public static SocketIOComponent SocketIO;
-    //private JSONParser myJsonParser = new JSONParser();
+    private JSONParser myJsonParser = new JSONParser();
 
     private void Awake()
     {
@@ -30,16 +29,20 @@ public class Register : MonoBehaviour {
     private void OnRegisterSuccesFull(SocketIOEvent Obj)
     {
 
-        GameObject messageBox = Instantiate(messageAlert);
-        messageBox.transform.position = passwordField.transform.position;
-        messageBox.transform.Find("Message").gameObject.GetComponent<Text>().text = "Register Succesfull.Close to redirect";
+        GameObject dialogMessage = Instantiate(messageAlert);
+        dialogMessage.transform.parent = transform;
+        dialogMessage.transform.position = passwordField.transform.position;
+        dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Register Succesfull. Go to Login";
     }
     private void OnUserNameExist(SocketIOEvent Obj)
     {
-        GameObject messageBox = Instantiate(messageAlert);
-        messageBox.transform.position = passwordField.transform.position;
-        messageBox.transform.Find("Message").gameObject.GetComponent<Text>().text = "Register Failed. Username exist in database";
+        GameObject dialogMessage = Instantiate(messageAlert);
+        dialogMessage.transform.parent = transform;
+
+        dialogMessage.transform.position = passwordField.transform.position;
+        dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Register Failed. Username exist in database";
     }
+
     public void ChangeLevelToLogin()
     {
         SceneManager.LoadScene(0);
@@ -47,7 +50,7 @@ public class Register : MonoBehaviour {
 
     public void SendDataToServer()
     {
-        //SocketIO.Emit("register", new JSONObject(myJsonParser.RegisterDataToJson(Username, Password, Email)));
+        SocketIO.Emit("register", new JSONObject(myJsonParser.RegisterDataToJson(Username, Password, Email)));
     }
     public void RegisterUser()
     {
@@ -89,9 +92,10 @@ public class Register : MonoBehaviour {
 
     private bool ValidationInputs()
     {
-         string errorMessage;
+        string errorMessage;
         if (!ValidatePassword(Password, out errorMessage)) {
             GameObject messageBox = Instantiate(messageAlert);
+            messageBox.transform.parent = transform;
             messageBox.transform.position = passwordField.transform.position;
             messageBox.transform.Find("Message").gameObject.GetComponent<Text>().text = errorMessage;
             return false;
@@ -100,6 +104,7 @@ public class Register : MonoBehaviour {
         if(!ValidateUser(Username,out errorMessage))
         {
             GameObject messageBox = Instantiate(messageAlert);
+            messageBox.transform.parent = transform;
             messageBox.transform.position = passwordField.transform.position;
             messageBox.transform.Find("Message").gameObject.GetComponent<Text>().text = errorMessage;
             return false;
@@ -107,6 +112,7 @@ public class Register : MonoBehaviour {
         if (!ValidateEmail(Email, out errorMessage))
         {
             GameObject messageBox = Instantiate(messageAlert);
+            messageBox.transform.parent = transform;
             messageBox.transform.position = passwordField.transform.position;
             messageBox.transform.Find("Message").gameObject.GetComponent<Text>().text = errorMessage;
             return false;
@@ -197,4 +203,6 @@ public class Register : MonoBehaviour {
 
         return true;
     }
+       
+    
 }
