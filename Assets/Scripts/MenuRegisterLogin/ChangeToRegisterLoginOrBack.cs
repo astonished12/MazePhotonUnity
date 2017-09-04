@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeToRegisterLoginOrBack : MonoBehaviour {
-    
+public class ChangeToRegisterLoginOrBack : MonoBehaviour
+{
+
     public void ChangeToRegisterScene()
     {
         SceneManager.LoadScene(1);
@@ -29,4 +30,7 @@ public class ChangeToRegisterLoginOrBack : MonoBehaviour {
     {
         SceneManager.LoadScene(3);
     }
+
 }
+
+    

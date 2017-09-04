@@ -6,10 +6,22 @@ using UnityEngine;
 public class SocketConnectionAndEvents : MonoBehaviour {
 
     SocketIOComponent socket;
-	// Use this for initialization
-	void Start () {
+    private static bool created = false;
+
+    // Use this for initialization
+    void Awake () {
         socket = GetComponent<SocketIOComponent>();
-        socket.Connect();
+        if (created == false)
+        {
+            DontDestroyOnLoad(this.gameObject);
+            socket.Connect();
+            created = true;
+           
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 	
 	
