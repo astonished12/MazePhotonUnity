@@ -11,15 +11,15 @@ var DbManager = function(){
 
     this.connection.connect();
 
-    this.InserIntoUsers = function(_username, _password, _email, cb){
-        this.connection.query('SELECT * from users where username=?',_username, function(err, rows, fields) {
+    this.InserIntoUsers = function(myUsername, myPassword, myEmail, cb){
+        this.connection.query('SELECT * from users where username=?',myUsername, function(err, rows, fields) {
             if (err)
                 cb(err);
 
             console.log('The solution is: ', rows);
             if(rows.length==0)
             {
-                var myUser = { username: _username, password: _password, email : _email, isOnline : false };
+                var myUser = { username: myUsername, password: myPassword, email : myEmail, isOnline : false };
                 self.connection.query('INSERT INTO users SET ?', myUser, function(err,res){
                     if(err) throw err;
                     succes = true;
@@ -34,9 +34,9 @@ var DbManager = function(){
         });
     }
 
-    this.CheckLogin = function(_username, _password, cb){
-        var myUser = {username: _username, password: _password};
-        this.connection.query('SELECT * from users where username=? and password=?',[_username,_password], function(err, rows, fields) {
+    this.CheckLogin = function(myUsername, myPassword, cb){
+        var myUser = {username: myUsername, password: myPassword};
+        this.connection.query('SELECT * from users where username=? and password=?',[myUsername,myPassword], function(err, rows, fields) {
             if (err)
                 cb(err);
 
@@ -48,15 +48,16 @@ var DbManager = function(){
             }
             else
             {
-                console.log("Good login "+rows[0]["idUser"]);
+                console.log("Good login "+rows[0]["idusers"]);
                 cb("succes",rows[0]["idUser"]);
             }
         });
     }
-    
-    this.MakeLoginOnOff = function(_username, status){
-        this.connection.query('UPDATE users SET isOnline = ? WHERE username = ?', [status, _username]);
+
+    this.MakeLoginOnOff = function(myUsername, status){
+        this.connection.query('UPDATE users SET isOnline = ? WHERE username = ?', [status, myUsername]);
     }
+    
     this.InsertFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);
@@ -82,6 +83,7 @@ var DbManager = function(){
             }
         });        
     } 
+
     this.RemoveFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);

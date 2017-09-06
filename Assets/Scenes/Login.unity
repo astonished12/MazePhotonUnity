@@ -411,10 +411,10 @@ Prefab:
     - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 842244079}
+      objectReference: {fileID: 842244080}
     - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ChangeToGameScene
+      value: LoginUser
       objectReference: {fileID: 0}
     - target: {fileID: 11437168, guid: dca0aad03263d574aa1f29c855777b46, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -683,6 +683,7 @@ GameObject:
   - component: {fileID: 842244078}
   - component: {fileID: 842244077}
   - component: {fileID: 842244079}
+  - component: {fileID: 842244080}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -761,6 +762,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc65dde98e0b06c46b34d303f9b0b823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &842244080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 842244075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44c5718817b97c448bec84eb9a0c7a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameField: {fileID: 1718859376}
+  passwordField: {fileID: 1557837606}
+  messageAlert: {fileID: 1007364961351692, guid: 5f5af3ce3966882468cd14ff204ff043,
+    type: 2}
 --- !u!1 &1400486211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1021,14 @@ Prefab:
       propertyPath: m_FontData.m_MinSize
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 11459528, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
+      propertyPath: m_ContentType
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 11459528, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
+      propertyPath: m_InputType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
   m_IsPrefabParent: 0
@@ -1012,6 +1036,10 @@ Prefab:
 RectTransform:
   m_PrefabParentObject: {fileID: 22432452, guid: 2949ccb6551ea1a40880cb69d93ba521,
     type: 2}
+  m_PrefabInternal: {fileID: 1557837604}
+--- !u!1 &1557837606 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 180818, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
   m_PrefabInternal: {fileID: 1557837604}
 --- !u!1001 &1625373995
 Prefab:
@@ -1254,6 +1282,10 @@ Prefab:
 RectTransform:
   m_PrefabParentObject: {fileID: 22432452, guid: 2949ccb6551ea1a40880cb69d93ba521,
     type: 2}
+  m_PrefabInternal: {fileID: 1718859374}
+--- !u!1 &1718859376 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 180818, guid: 2949ccb6551ea1a40880cb69d93ba521, type: 2}
   m_PrefabInternal: {fileID: 1718859374}
 --- !u!1 &1824353657
 GameObject:

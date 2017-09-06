@@ -26,11 +26,7 @@ public class ChangeToRegisterLoginOrBack : MonoBehaviour
         Application.Quit();
     }
 
-    public void ChangeToGameScene()
-    {
-        SceneManager.LoadScene(3);
-    }
-
+   
 }
 
     
