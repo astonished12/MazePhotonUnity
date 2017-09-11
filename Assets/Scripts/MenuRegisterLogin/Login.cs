@@ -34,7 +34,7 @@ public class Login : MonoBehaviour {
         dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Login succesfull.";
         UserData.userName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
         //MOVE TO PROFILE FRIENDS CHAT SCENE NEW GAME FIND SERVERS
-        SceneManager.LoadScene(4);
+        SceneManager.LoadScene(3);
 
     }
 
