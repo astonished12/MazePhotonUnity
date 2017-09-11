@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class JSONParser{
@@ -14,4 +16,9 @@ public class JSONParser{
         return string.Format(@"{{""username"":""{0}"",""password"":""{1}""}}", username, password);
     }
 
+    public string[] ElementFromJsonToString(string target)
+    {
+        string[] newString = Regex.Split(target, "\"");
+        return newString;
+    }
 }

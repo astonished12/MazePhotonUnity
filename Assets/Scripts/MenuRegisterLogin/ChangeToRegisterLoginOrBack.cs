@@ -26,7 +26,7 @@ public class ChangeToRegisterLoginOrBack : MonoBehaviour
         Application.Quit();
     }
 
-   
+  
 }
 
     

@@ -15,5 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Login.unity
     guid: 484369f9a8af6d847970b8fd9e7359a6
   - enabled: 1
+    path: Assets/Scenes/LoginFB.unity
+    guid: 7e4b5271ecebf264dbec08a7aeacc517
+  - enabled: 1
     path: Assets/Scenes/First.unity
     guid: bab394c40dc51dd408b6553464951c61

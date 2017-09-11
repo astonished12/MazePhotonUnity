@@ -32,9 +32,9 @@ public class Login : MonoBehaviour {
         dialogMessage.transform.parent = transform;
         dialogMessage.transform.position = passwordField.transform.position;
         dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Login succesfull.";
-        //etworkRegisterLogin.UserName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
+        UserData.userName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
         //MOVE TO PROFILE FRIENDS CHAT SCENE NEW GAME FIND SERVERS
-        //SceneManager.LoadScene(3);
+        SceneManager.LoadScene(4);
 
     }
 
@@ -102,4 +102,5 @@ public class Login : MonoBehaviour {
         SocketIO.Emit("login", new JSONObject(myJsonParser.LoginDataToJson(username, password)));
     }
 
+  
 }
