@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonsPrompt : MonoBehaviour {
+public class CancelButtonDestroy : MonoBehaviour {
 
 	public void CancelOnClick()
     {
