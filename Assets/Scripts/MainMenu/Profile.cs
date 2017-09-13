@@ -23,15 +23,11 @@ public class Profile : MonoBehaviour {
         nomatches.GetComponent<Text>().text += " "+UserData.nomatches;
         nomatchesWon.GetComponent<Text>().text += " "+UserData.nomatchesWon;
 
-        if (UserData.photourl != "")
-        {
-            SocketIO.Emit("newPhoto");
-        }
-        else
-        {
+        if (UserData.photourl == "")
+        {        
             output.texture = Resources.Load<Texture2D>("unknown");
-
         }
+
         SocketIO.On("photoReceive", OnPhotoReceive);
     }
     

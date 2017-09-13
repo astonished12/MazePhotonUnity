@@ -18,6 +18,7 @@
   "homepage": "https://github.com/astonished12/MazePhotonUnity#readme",
   "description": "",
   "dependencies": {
+    "fs": "0.0.1-security",
     "mysql": "^2.14.1",
     "socket.io": "^2.0.3"
   }

@@ -1,6 +1,7 @@
 //GLOBAL VARIABLES
 var server = require('http').createServer();
 var io = require('socket.io')(server);
+var fs = require('fs');
 var DbManager = require("./Server/DbManager.js");
 var dbM = new DbManager();
 
@@ -17,6 +18,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('register', onRegister);
 	socket.on('login', onLogin);
 	socket.on('disconnect', function(){});
+	socket.on('avatarImg',onNewPhoto);
 });
 
 server.listen(process.env.PORT||3000);
@@ -82,3 +84,10 @@ var onLogin = function(data){
         socketRef.emit("alreadyLoged");
     }
 }
+
+var onNewPhoto = function(data){
+	var data = data.photo.replace(/^data:image\/\w+;base64,/, "");
+	var buf = new Buffer(data, 'base64');
+	fs.writeFile('image.png', buf);
+}
+

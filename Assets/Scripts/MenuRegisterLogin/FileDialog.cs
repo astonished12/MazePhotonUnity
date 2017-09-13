@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using SFB;
+using SocketIO;
+using System;
 
 [RequireComponent(typeof(Button))]
 public class FileDialog : MonoBehaviour, IPointerDownHandler
@@ -19,6 +21,7 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
     public bool Multiselect = false;
 
     public RawImage output;
+    public static SocketIOComponent SocketIO;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
     //
@@ -39,6 +42,13 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
     //
     // Standalone platforms & editor
     //
+
+
+    void Start()
+    {
+        SocketIO = GameObject.Find("SetupSocketConnectionToGame").GetComponent<SocketIOComponent>();
+
+    }
     public void OnPointerDown(PointerEventData eventData) { }
 
 
@@ -59,5 +69,14 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
         var loader = new WWW(url);
         yield return loader;
         output.texture = loader.texture;
+
+        //TO DO JSON PARSER PENTRU IMAGINI SEND RECEIVE SOCKET
+        JSONObject j = new JSONObject(JSONObject.Type.OBJECT);
+        byte[] myTextureBytes  = loader.texture.EncodeToPNG();
+        String myTextureBytesEncodedAsBase64  = System.Convert.ToBase64String(myTextureBytes);
+
+        j.AddField("photo", myTextureBytesEncodedAsBase64);
+        SocketIO.Emit("avatarImg", j);
+
     }
 }
