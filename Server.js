@@ -49,7 +49,7 @@ var onLogin = function(data){
     var socketRef = this;
     if(!checkAlreadyLog(data["username"]))
     {
-        dbM.CheckLogin(data["username"],data["password"], function(err,id) {
+        dbM.CheckLogin(data["username"],data["password"], function(err,resultrow) {
             if(err)
                 console.log(err);
 
@@ -58,7 +58,10 @@ var onLogin = function(data){
             else if(err==="succes")
             {
                 socketRef.emit("loginSuccesfull",{
-                    username : data["username"]
+                    username : resultrow["username"],
+                    email: resultrow["email"],
+                    nomatches : resultrow["nomatches"],
+                    nomatcheswon: resultrow["nomatcheswon"]
                 });
 
 
@@ -66,7 +69,7 @@ var onLogin = function(data){
                 //to do update databse for log
                 //send array of connected frinds
                 //console.log("Dupa logare idu meu este "+id);
-                mapNameInGameIdDatabase[data["username"]] = id;
+                mapNameInGameIdDatabase[data["username"]] = resultrow["idusers"];
                 dbM.MakeLoginOnOff(data["username"],true);
 
                 //io.sockets.emit('updateListFriends');

@@ -32,7 +32,21 @@ public class Login : MonoBehaviour {
         dialogMessage.transform.parent = transform;
         dialogMessage.transform.position = passwordField.transform.position;
         dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Login succesfull.";
+
         UserData.userName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
+        UserData.email = myJsonParser.ElementFromJsonToString(obj.data.GetField("email").ToString())[1];
+        UserData.nomatches  = obj.data.GetField("nomatches").ToString();
+        UserData.nomatchesWon = obj.data.GetField("nomatcheswon").ToString();
+        if (obj.data.GetField("photourl") != null)
+        {
+            UserData.photourl = myJsonParser.ElementFromJsonToString(obj.data.GetField("photourl").ToString())[1];
+        }
+        else
+        {
+            UserData.photourl = "";
+        }
+
+        Debug.Log("MOVE TO SCENE 3");
         //MOVE TO PROFILE FRIENDS CHAT SCENE NEW GAME FIND SERVERS
         SceneManager.LoadScene(3);
 

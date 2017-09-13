@@ -449,6 +449,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 437369475}
     m_Modifications:
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224500262981965664, guid: 9cea83dc51a1f234a8c5add6de198bda,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -553,6 +558,31 @@ Prefab:
         type: 2}
       propertyPath: m_AnchoredPosition.x
       value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1013285734}
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartChatButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 114411488879394368, guid: 9cea83dc51a1f234a8c5add6de198bda,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9cea83dc51a1f234a8c5add6de198bda, type: 2}
@@ -767,7 +797,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: d8477b5c278deae48a17bdecb965b4b4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bc6e031fe7e3c9f43b52db1edafb4aa8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1315,7 +1345,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421d6c5306f15e44488461664fa57c8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profilePanel: {fileID: 1860756226695226, guid: 0379a09804058be4a8601ed350231776,
+  profilePanel: {fileID: 1811983179446670, guid: 0379a09804058be4a8601ed350231776,
+    type: 2}
+  chatBoxPrefab: {fileID: 1703209562975520, guid: 67e72aca5e2be8548b438ef1fd453233,
     type: 2}
 --- !u!114 &1013285735
 MonoBehaviour:
@@ -3307,6 +3339,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 437369475}
     m_Modifications:
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224293979193698456, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -3411,6 +3448,31 @@ Prefab:
         type: 2}
       propertyPath: m_AnchoredPosition.x
       value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1013285734}
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartChatButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 114791807244729346, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4489a1f2b0755004eaf7b6d9c7de1bf4, type: 2}
