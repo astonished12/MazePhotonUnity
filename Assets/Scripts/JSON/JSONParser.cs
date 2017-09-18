@@ -16,6 +16,11 @@ public class JSONParser{
         return string.Format(@"{{""username"":""{0}"",""password"":""{1}""}}", username, password);
     }
 
+    public string LoginUserAndUrlPhotoToJSON(string username,string url)
+    {
+        return string.Format(@"{{""username"":""{0}"",""photourl"":""{1}""}}", username, url);
+    }
+
     public string[] ElementFromJsonToString(string target)
     {
         string[] newString = Regex.Split(target, "\"");

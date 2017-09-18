@@ -76,6 +76,8 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
         String myTextureBytesEncodedAsBase64  = System.Convert.ToBase64String(myTextureBytes);
 
         j.AddField("photo", myTextureBytesEncodedAsBase64);
+        j.AddField("username", UserData.userName);
+
         SocketIO.Emit("avatarImg", j);
 
     }

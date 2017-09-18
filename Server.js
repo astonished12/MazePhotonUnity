@@ -19,6 +19,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('login', onLogin);
 	socket.on('disconnect', function(){});
 	socket.on('avatarImg',onNewPhoto);
+	socket.on('getPhoto', onGetPhoto);
 });
 
 server.listen(process.env.PORT||3000);
@@ -63,7 +64,8 @@ var onLogin = function(data){
                     username : resultrow["username"],
                     email: resultrow["email"],
                     nomatches : resultrow["nomatches"],
-                    nomatcheswon: resultrow["nomatcheswon"]
+                    nomatcheswon: resultrow["nomatcheswon"],
+                    photourl : resultrow["photourl"]
                 });
 
 
@@ -86,8 +88,20 @@ var onLogin = function(data){
 }
 
 var onNewPhoto = function(data){
-	var data = data.photo.replace(/^data:image\/\w+;base64,/, "");
-	var buf = new Buffer(data, 'base64');
-	fs.writeFile('image.png', buf);
+	var dataphoto = data.photo.replace(/^data:image\/\w+;base64,/, "");
+	var buf = new Buffer(dataphoto, 'base64');
+	var path = './Server/Photos/'+data["username"]+".png";
+	fs.writeFile(path, buf);
+	dbM.SetPathOfPhoto(data["username"],path);
+}
+
+var onGetPhoto = function(data){
+	console.log("GET PHOTO FUNCTION");
+	var socketRef = this;
+	var path = data["photourl"];
+	var base64_data_photo = new Buffer(fs.readFileSync(path)).toString('base64');
+	socketRef.emit('photobase64',{
+		photoBase64:base64_data_photo
+	});
 }
 

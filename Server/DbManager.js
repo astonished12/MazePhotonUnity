@@ -19,7 +19,7 @@ var DbManager = function(){
             console.log('The solution is: ', rows);
             if(rows.length==0)
             {
-                var myUser = { username: myUsername, password: myPassword, email : myEmail, isOnline : false, nomatches: 0, nomatcheswon: 0 };
+                var myUser = { username: myUsername, password: myPassword, email : myEmail, isOnline : false, nomatches: 0, nomatcheswon: 0, photourl: "" };
                 self.connection.query('INSERT INTO users SET ?', myUser, function(err,res){
                     if(err) throw err;
                     succes = true;
@@ -173,6 +173,11 @@ var DbManager = function(){
             }
         });
     }
+
+    this.SetPathOfPhoto = function(_username, _photourl){
+        this.connection.query('UPDATE users SET photourl = ? WHERE username = ?', [_photourl, _username]);
+    }
+
 
 }
 module.exports = DbManager;
