@@ -20,7 +20,8 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
     public string Extension = "";
     public bool Multiselect = false;
 
-    public RawImage output;
+    public RawImage avatarProfile;
+    
     public static SocketIOComponent SocketIO;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -68,8 +69,8 @@ public class FileDialog : MonoBehaviour, IPointerDownHandler
         Debug.Log("URL: " + url);
         var loader = new WWW(url);
         yield return loader;
-        output.texture = loader.texture;
-
+        avatarProfile.texture = loader.texture;
+        GameObject.Find("CanvasMenu").transform.GetChild(2).gameObject.transform.GetChild(0).GetComponent<RawImage>().texture = loader.texture;
         //TO DO JSON PARSER PENTRU IMAGINI SEND RECEIVE SOCKET
         JSONObject j = new JSONObject(JSONObject.Type.OBJECT);
         byte[] myTextureBytes  = loader.texture.EncodeToPNG();
