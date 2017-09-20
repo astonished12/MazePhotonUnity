@@ -20,6 +20,8 @@ io.sockets.on('connection', function(socket){
 	socket.on('disconnect', onClientDisconnect);
 	socket.on('avatarImg',onNewPhoto);
 	socket.on('getPhoto', onGetPhoto);
+	socket.on("addFriend",onAddFriend);
+
 });
 
 server.listen(process.env.PORT||3000);
@@ -123,3 +125,31 @@ var onGetPhoto = function(data){
 	});
 }
 
+var getSocketIdOfUser = function(name,mySocketId){
+    for(var sockId in allPlayersLogged){
+        if(allPlayersLogged[sockId] === name && sockId!==mySocketId)
+            return sockId;
+    }
+    return -1;
+}
+
+var onAddFriend = function(data){
+    var socketId = getSocketIdOfUser(data["myfriend"],this.id);
+    if(socketId!==-1){
+        console.log("Jucatorul "+data["myfriend"]+" cu "+socketId+" este online");      
+
+        dbM.InsertFriend(mapNameInGameIdDatabase[allPlayersLogged[this.id]], data["myfriend"]);
+        this.emit("newFriend",{
+            name: allPlayersLogged[socketId]
+        });
+
+        io.to(socketId).emit("newFriend",{
+            name: allPlayersLogged[this.id]
+        });
+    }
+    else
+    {
+        console.log("Jucatorul "+data["myfriend"]+ " nu este online ");
+        this.emit("playerNotOnline");
+    }
+}

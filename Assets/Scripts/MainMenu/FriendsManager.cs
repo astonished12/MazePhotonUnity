@@ -10,6 +10,8 @@ public class FriendsManager : MonoBehaviour {
     //public GameObject friendOnlinePrefab;
     //public GameObject friendOfflinePrefab;
     public RawImage avatar;
+    public GameObject inputNameFriendSearch;
+    public GameObject messageAlert;
 
     public static SocketIOComponent SocketIO;
     private JSONParser myJsonParser;
@@ -29,6 +31,15 @@ public class FriendsManager : MonoBehaviour {
         }
 
         SocketIO.On("photobase64", OnPhotoReceive);
+        SocketIO.On("playerNotOnline", OnPlayerNotOnline);
+    }
+
+    private void OnPlayerNotOnline(SocketIOEvent obj)
+    {
+        GameObject dialogMessage = Instantiate(messageAlert);
+        dialogMessage.transform.parent = transform;
+        dialogMessage.transform.position = inputNameFriendSearch.transform.position;
+        dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "User not online";
     }
 
     public void OnPhotoReceive(SocketIOEvent eventObj)
@@ -40,4 +51,19 @@ public class FriendsManager : MonoBehaviour {
         avatar.texture = convertedBase64String;
     }
 
+    public void AddFriendButtonClicked()
+    {
+        string posibleFriend = inputNameFriendSearch.GetComponent<InputField>().text;
+        if (String.IsNullOrEmpty(posibleFriend)==false)
+        {
+            SocketIO.Emit("addFriend", new JSONObject(myJsonParser.NewFriendPackage(UserData.userName, posibleFriend)));
+        }
+        else
+        {
+            GameObject dialogMessage = Instantiate(messageAlert);
+            dialogMessage.transform.parent = transform;
+            dialogMessage.transform.position = inputNameFriendSearch.transform.position;
+            dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Set an valid user";
+        }
+    }
 }
