@@ -39,14 +39,7 @@ public class Login : MonoBehaviour {
         UserData.nomatchesWon = obj.data.GetField("nomatcheswon").ToString();
         UserData.photourl = myJsonParser.ElementFromJsonToString(obj.data.GetField("photourl").ToString())[1];
         
-        /*if (obj.data.GetField("photourl") != null)
-        {
-            UserData.photourl = myJsonParser.ElementFromJsonToString(obj.data.GetField("photourl").ToString())[1];
-        }
-        else
-        {
-            UserData.photourl = "";
-        }*/
+        
 
         Debug.Log("MOVE TO SCENE 3");
         //MOVE TO PROFILE FRIENDS CHAT SCENE NEW GAME FIND SERVERS

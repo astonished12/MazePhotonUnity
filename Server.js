@@ -17,7 +17,7 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('register', onRegister);
 	socket.on('login', onLogin);
-	socket.on('disconnect', function(){});
+	socket.on('disconnect', onClientDisconnect);
 	socket.on('avatarImg',onNewPhoto);
 	socket.on('getPhoto', onGetPhoto);
 });
@@ -25,7 +25,14 @@ io.sockets.on('connection', function(socket){
 server.listen(process.env.PORT||3000);
 console.log("Server started.");
 
-
+var onClientDisconnect = function(){
+	if(allPlayersLogged[this.id]){
+        dbM.MakeLoginOnOff(allPlayersLogged[this.id],false);
+        delete allPlayersLogged[allPlayersLogged[this.id]];
+        delete allPlayersLogged[this.id];
+        //io.sockets.emit('updateListFriends');
+    }
+}
 var onRegister = function(data){
 	console.log(data);
 
@@ -91,12 +98,23 @@ var onNewPhoto = function(data){
 	var dataphoto = data.photo.replace(/^data:image\/\w+;base64,/, "");
 	var buf = new Buffer(dataphoto, 'base64');
 	var path = './Server/Photos/'+data["username"]+".png";
-	fs.writeFile(path, buf);
+	fs.exists(path, function(exists) {
+				  if(exists) {
+				    //DELETE AND RECREATE
+				    console.log('File exists. Deleting now ...');
+				    fs.unlinkSync(path);
+				    fs.writeFileSync(path, buf);
+				  } 
+				  else {
+				    //NEW FILE
+				    console.log('New phot');
+					fs.writeFileSync(path, buf);
+				  }
+		});
 	dbM.SetPathOfPhoto(data["username"],path);
 }
 
 var onGetPhoto = function(data){
-	console.log("GET PHOTO FUNCTION");
 	var socketRef = this;
 	var path = data["photourl"];
 	var base64_data_photo = new Buffer(fs.readFileSync(path)).toString('base64');

@@ -24,7 +24,7 @@ public class Profile : MonoBehaviour {
         nomatches.GetComponent<Text>().text += " "+UserData.nomatches;
         nomatchesWon.GetComponent<Text>().text += " "+UserData.nomatchesWon;
         Debug.Log(UserData.photourl);
-        if (UserData.photourl == "")
+        if (UserData.photourl == "empty")
         {        
             output.texture = Resources.Load<Texture2D>("unknown");
         }
@@ -39,9 +39,9 @@ public class Profile : MonoBehaviour {
     public void OnPhotoReceive(SocketIOEvent eventObj)
     {
         String base64string = myJsonParser.ElementFromJsonToString(eventObj.data.GetField("photoBase64").ToString())[1];
-
-        Texture2D convertedBase64String = new Texture2D(2, 2);
-        byte[] decodedBytes = System.Text.Encoding.UTF8.GetBytes(base64string);
+        Debug.Log("aplicam textura : "+ base64string);
+        Texture2D convertedBase64String = new Texture2D(128, 128);
+        byte[] decodedBytes = Convert.FromBase64String(base64string);
         convertedBase64String.LoadImage(decodedBytes);
         output.texture = convertedBase64String;
     }

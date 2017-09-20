@@ -19,7 +19,7 @@ var DbManager = function(){
             console.log('The solution is: ', rows);
             if(rows.length==0)
             {
-                var myUser = { username: myUsername, password: myPassword, email : myEmail, isOnline : false, nomatches: 0, nomatcheswon: 0, photourl: "" };
+                var myUser = { username: myUsername, password: myPassword, email : myEmail, isOnline : false, nomatches: 0, nomatcheswon: 0, photourl: 'empty' };
                 self.connection.query('INSERT INTO users SET ?', myUser, function(err,res){
                     if(err) throw err;
                     succes = true;
