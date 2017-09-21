@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class FriendsManager : MonoBehaviour {
@@ -15,7 +16,7 @@ public class FriendsManager : MonoBehaviour {
     public GameObject messageAlert;
 
     private static SocketIOComponent SocketIO;
-    private Dictionary<string, GameObject> friendList = new Dictionary<string, GameObject>();
+    private static Dictionary<string, GameObject> friendList = new Dictionary<string, GameObject>();
     private JSONParser myJsonParser;
     private void Start()
     {
@@ -37,6 +38,7 @@ public class FriendsManager : MonoBehaviour {
         SocketIO.On("newFriend", OnNewFriend);
         SocketIO.On("listFriends", OnReceiveListFriends);
         SocketIO.On("friendPhoto", OnReceivePhotoFriend);
+        SocketIO.On("removeFriend", OnRemoveFriend);
 
     }
 
@@ -97,9 +99,16 @@ public class FriendsManager : MonoBehaviour {
         }
     }
 
-    public void RemoveButtonClicked()
+    public static void RemoveFriend(string friendname)
     {
-
+        if (CheckDuplicates(friendname))
+        {
+            Destroy(friendList[friendname]);
+            friendList.Remove(friendname);
+            JSONObject tmp = new JSONObject();
+            tmp.AddField("friendName", friendname);
+            SocketIO.Emit("removeFriend", tmp);
+        }
     }
 
     private void OnReceiveListFriends(SocketIOEvent obj)
@@ -140,12 +149,36 @@ public class FriendsManager : MonoBehaviour {
         }
     }
 
+    private void OnRemoveFriend(SocketIOEvent obj)
+    {
+        JSONParser myJsonParser = new JSONParser();
+        var friendName = myJsonParser.ElementFromJsonToString(obj.data.GetField("name").ToString())[1];
+
+        GameObject dialogMessage = Instantiate(messageAlert);
+        dialogMessage.transform.parent = transform;
+        dialogMessage.transform.position = inputNameFriendSearch.transform.position;
+        dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = friendName+" removed you";
+        JSONObject temp = new JSONObject();
+        temp.AddField("username", UserData.userName);
+        SocketIO.Emit("GetMyFriends", temp);
+    }
+
     private void DestroyAllFriendsGameObjects()
     {
         foreach (string key in friendList.Keys)
         {
             Destroy(friendList[key]);
         }
+    }
+
+    private static bool CheckDuplicates(string name)
+    {
+        foreach (string key in friendList.Keys)
+        {
+            if (key == name)
+                return true;
+        }
+        return false;
     }
 
 }

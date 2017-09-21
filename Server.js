@@ -23,6 +23,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('addFriend',onAddFriend);
 	socket.on('GetMyFriends',onGetMyFriends);
 	socket.on('getPhotoFriend',onGetFriendPhoto);
+	socket.on('removeFriend', onRemoveFriend);
 });
 
 server.listen(process.env.PORT||3000);
@@ -181,4 +182,26 @@ var onGetMyFriends = function(data){
         });
 
     });
+}
+
+var onRemoveFriend = function(data){
+	 var socketId = getSocketIdOfUser(data["friendName"],this.id);
+
+    if(socketId!==-1){
+        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");        
+        dbM.RemoveFriend(mapNameInGameIdDatabase[allPlayersLogged[this.id]], data["friendName"]);
+        /*this.emit("removeFriend",{
+            name: allPlayersLogged[socketId]
+        });*/
+
+        io.to(socketId).emit("removeFriend",{
+            name: allPlayersLogged[this.id]
+        });        
+    }
+    else
+    {
+        console.log("Jucatorul "+data["friendName"]+ " nu este online ");
+        dbM.RemoveFriend(mapNameInGameIdDatabase[allPlayersLogged[this.id]], data["friendName"]);
+        io.sockets.emit('askfriends');
+    }
 }
