@@ -22,7 +22,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('getPhoto', onGetPhoto);
 	socket.on('addFriend',onAddFriend);
 	socket.on('GetMyFriends',onGetMyFriends);
-
+	socket.on('getPhotoFriend',onGetFriendPhoto);
 });
 
 server.listen(process.env.PORT||3000);
@@ -33,7 +33,7 @@ var onClientDisconnect = function(){
         dbM.MakeLoginOnOff(allPlayersLogged[this.id],false);
         delete allPlayersLogged[allPlayersLogged[this.id]];
         delete allPlayersLogged[this.id];
-        //io.sockets.emit('updateListFriends');
+        io.sockets.emit('askfriends');
     }
 }
 var onRegister = function(data){
@@ -83,10 +83,10 @@ var onLogin = function(data){
                 //to do update databse for log
                 //send array of connected frinds
                 //console.log("Dupa logare idu meu este "+id);
-                mapNameInGameIdDatabase[data["username"]] = resultrow["idusers"];
+                mapNameInGameIdDatabase[data["username"]] = resultrow["idUser"];
                 dbM.MakeLoginOnOff(data["username"],true);
 
-                //io.sockets.emit('updateListFriends');
+                io.sockets.emit('askfriends');
 
             }
         });
@@ -115,17 +115,25 @@ var onNewPhoto = function(data){
 				  }
 		});
 	dbM.SetPathOfPhoto(data["username"],path);
+	io.sockets.emit('askfriends');
+
 }
 
 var onGetPhoto = function(data){
-	var socketRef = this;
 	var path = data["photourl"];
 	var base64_data_photo = new Buffer(fs.readFileSync(path)).toString('base64');
-	socketRef.emit('photobase64',{
+	this.emit('photobase64',{
 		photoBase64:base64_data_photo
 	});
 }
-
+var onGetFriendPhoto = function(data){
+	var path = data["photourl"];
+	var base64_data_photo = new Buffer(fs.readFileSync(path)).toString('base64');
+	this.emit('friendPhoto',{
+		friendName :data["username"],
+		photoBase64:base64_data_photo
+	});
+}
 var getSocketIdOfUser = function(name,mySocketId){
     for(var sockId in allPlayersLogged){
         if(allPlayersLogged[sockId] === name && sockId!==mySocketId)
@@ -163,7 +171,7 @@ var onGetMyFriends = function(data){
         if(status=="noFriends"){
             console.log("No friends for "+idRow);
         }
-        
+
         if(status=="Friends"){                      
             console.log("Lista prietenilor este :"+ listOfFriends);
         }

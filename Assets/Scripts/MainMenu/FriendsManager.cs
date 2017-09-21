@@ -35,7 +35,20 @@ public class FriendsManager : MonoBehaviour {
         SocketIO.On("photobase64", OnPhotoReceive);
         SocketIO.On("playerNotOnline", OnPlayerNotOnline);
         SocketIO.On("newFriend", OnNewFriend);
+        SocketIO.On("listFriends", OnReceiveListFriends);
+        SocketIO.On("friendPhoto", OnReceivePhotoFriend);
 
+    }
+
+    private void OnReceivePhotoFriend(SocketIOEvent obj)
+    {
+        Debug.Log("FRIEND PHOTO RECEIVED");
+        String base64string = myJsonParser.ElementFromJsonToString(obj.data.GetField("photoBase64").ToString())[1];
+        String friendName = myJsonParser.ElementFromJsonToString(obj.data.GetField("friendName").ToString())[1];
+        Texture2D convertedBase64String = new Texture2D(128, 128);
+        byte[] decodedBytes = Convert.FromBase64String(base64string);
+        convertedBase64String.LoadImage(decodedBytes);
+        friendList[friendName].transform.Find("RawImage").GetComponent<RawImage>().texture = convertedBase64String;
     }
 
     private void OnNewFriend(SocketIOEvent obj)
@@ -84,6 +97,11 @@ public class FriendsManager : MonoBehaviour {
         }
     }
 
+    public void RemoveButtonClicked()
+    {
+
+    }
+
     private void OnReceiveListFriends(SocketIOEvent obj)
     {
         DestroyAllFriendsGameObjects();
@@ -94,6 +112,8 @@ public class FriendsManager : MonoBehaviour {
         {
             string username = myJsonParser.ElementFromJsonToString(friends[i].GetField("username").ToString())[1];
             string isOnline = friends[i].GetField("isOnline").ToString().Replace("\"", "");
+            string url = myJsonParser.ElementFromJsonToString(friends[i].GetField("photourl").ToString())[1];
+            
             if (isOnline == "0")
             {
                 GameObject newFriend = Instantiate(friendOfflinePrefab);
@@ -107,6 +127,15 @@ public class FriendsManager : MonoBehaviour {
                 newFriend.transform.Find("Text").GetComponent<Text>().text = username;
                 newFriend.transform.SetParent(contentParent.transform, false);
                 friendList.Add(username, newFriend);
+            }
+            Debug.Log(url);
+            if (url != "empty")
+            {
+                SocketIO.Emit("getPhotoFriend", new JSONObject(myJsonParser.LoginUserAndUrlPhotoToJSON(username, url)));
+            }
+            else
+            {
+                friendList[username].transform.Find("Image").GetComponent<RawImage>().texture = (Texture2D)Resources.Load("unknown");
             }
         }
     }

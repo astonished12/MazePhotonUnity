@@ -48,7 +48,7 @@ var DbManager = function(){
             }
             else
             {
-                console.log("Good login "+rows[0]["idusers"]);
+                console.log("Good login "+rows[0]["idUser"]);
                 cb("succes",rows[0]);
             }
         });
@@ -109,7 +109,9 @@ var DbManager = function(){
         });        
     } 
     this.GetListOfFriendById = function(myId, cb){
-        this.connection.query('Select distinct idFriend,username,isOnline from users join friends on users.idusers = friends.idFriend where users.idusers In (SELECT idFriend FROM users u natural join friends f where u.idusers = ?) and users.idusers = friends.idFriend',myId, function(err, rows, fields) {
+        //Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = 5) and users.idUser = friends.idFriend ;
+        console.log("IDUL este "+myId);
+        this.connection.query('Select distinct idFriend,username,isOnline,photourl from themaze.users join themaze.friends on themaze.users.idUser = themaze.friends.idFriend where users.idUser In (SELECT idFriend FROM themaze.users u natural join themaze.friends f where u.idUser = ?) and themaze.users.idUser = themaze.friends.idFriend',myId, function(err, rows, fields) {
             if (err)
                 cb(err);
 
@@ -134,7 +136,7 @@ var DbManager = function(){
             }
             if(rows.length!=0)
             {
-                idUser = rows[0]["idusers"];
+                idUser = rows[0]["idUser"];
                 complete = true;
                 console.log(idUser);
                 callback(idUser);

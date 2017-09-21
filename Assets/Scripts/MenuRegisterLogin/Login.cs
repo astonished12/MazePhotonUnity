@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class Login : MonoBehaviour {
 
@@ -24,6 +25,14 @@ public class Login : MonoBehaviour {
         SocketIO.On("wrongData", OnDataDoesntExist);
         SocketIO.On("loginSuccesfull", OnLoginSuccesfull);
         SocketIO.On("alreadyLoged", OnAlreadyLogged);
+        SocketIO.On("askfriends", OnAskFriends);
+    }
+
+    private void OnAskFriends(SocketIOEvent obj)
+    {
+        JSONObject temp = new JSONObject();
+        temp.AddField("username", UserData.userName);
+        SocketIO.Emit("GetMyFriends", temp);
     }
 
     private void OnLoginSuccesfull(SocketIOEvent obj)
