@@ -20,7 +20,8 @@ io.sockets.on('connection', function(socket){
 	socket.on('disconnect', onClientDisconnect);
 	socket.on('avatarImg',onNewPhoto);
 	socket.on('getPhoto', onGetPhoto);
-	socket.on("addFriend",onAddFriend);
+	socket.on('addFriend',onAddFriend);
+	socket.on('GetMyFriends',onGetMyFriends);
 
 });
 
@@ -152,4 +153,24 @@ var onAddFriend = function(data){
         console.log("Jucatorul "+data["myfriend"]+ " nu este online ");
         this.emit("playerNotOnline");
     }
+}
+
+var onGetMyFriends = function(data){
+	var idRow = mapNameInGameIdDatabase[data["username"]];
+    var socketREF = this;
+
+    dbM.GetListOfFriendById(idRow, function(status,listOfFriends){
+        if(status=="noFriends"){
+            console.log("No friends for "+idRow);
+        }
+        
+        if(status=="Friends"){                      
+            console.log("Lista prietenilor este :"+ listOfFriends);
+        }
+
+        socketREF.emit("listFriends",{            
+            friends : listOfFriends
+        });
+
+    });
 }

@@ -30,7 +30,8 @@ public class JSONParser{
     public string NewFriendPackage(string myusername,string posibleFriend)
     {
         return string.Format(@"{{""username"":""{0}"",""myfriend"":""{1}""}}", myusername, posibleFriend);
-
     }
+
+    
 
 }

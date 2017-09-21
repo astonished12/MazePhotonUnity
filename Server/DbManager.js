@@ -61,6 +61,7 @@ var DbManager = function(){
     this.InsertFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);
+
         this.GetIdFromUserByName(nameFriend, function(param){
             if(param!=-1){
                 _idFriend = param;
@@ -108,7 +109,7 @@ var DbManager = function(){
         });        
     } 
     this.GetListOfFriendById = function(myId, cb){
-        this.connection.query('Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = ?) and users.idUser = friends.idFriend',myId, function(err, rows, fields) {
+        this.connection.query('Select distinct idFriend,username,isOnline from users join friends on users.idusers = friends.idFriend where users.idusers In (SELECT idFriend FROM users u natural join friends f where u.idusers = ?) and users.idusers = friends.idFriend',myId, function(err, rows, fields) {
             if (err)
                 cb(err);
 
@@ -133,7 +134,7 @@ var DbManager = function(){
             }
             if(rows.length!=0)
             {
-                idUser = rows[0]["idUser"];
+                idUser = rows[0]["idusers"];
                 complete = true;
                 console.log(idUser);
                 callback(idUser);

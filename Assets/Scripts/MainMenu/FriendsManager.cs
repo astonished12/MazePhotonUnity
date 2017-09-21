@@ -7,13 +7,15 @@ using UnityEngine.UI;
 
 public class FriendsManager : MonoBehaviour {
 
-    //public GameObject friendOnlinePrefab;
-    //public GameObject friendOfflinePrefab;
+    public GameObject friendOnlinePrefab;
+    public GameObject friendOfflinePrefab;
+    public GameObject contentParent;
     public RawImage avatar;
     public GameObject inputNameFriendSearch;
     public GameObject messageAlert;
 
-    public static SocketIOComponent SocketIO;
+    private static SocketIOComponent SocketIO;
+    private Dictionary<string, GameObject> friendList = new Dictionary<string, GameObject>();
     private JSONParser myJsonParser;
     private void Start()
     {
@@ -32,6 +34,21 @@ public class FriendsManager : MonoBehaviour {
 
         SocketIO.On("photobase64", OnPhotoReceive);
         SocketIO.On("playerNotOnline", OnPlayerNotOnline);
+        SocketIO.On("newFriend", OnNewFriend);
+
+    }
+
+    private void OnNewFriend(SocketIOEvent obj)
+    {
+        GameObject dialogMessage = Instantiate(messageAlert);
+        dialogMessage.transform.parent = transform;
+        dialogMessage.transform.position = inputNameFriendSearch.transform.position;
+        dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "New friend";
+
+        JSONObject temp = new JSONObject();
+        temp.AddField("username", UserData.userName);
+        SocketIO.Emit("GetMyFriends",temp);
+
     }
 
     private void OnPlayerNotOnline(SocketIOEvent obj)
@@ -66,4 +83,40 @@ public class FriendsManager : MonoBehaviour {
             dialogMessage.transform.Find("Message").gameObject.GetComponent<Text>().text = "Set an valid user";
         }
     }
+
+    private void OnReceiveListFriends(SocketIOEvent obj)
+    {
+        DestroyAllFriendsGameObjects();
+        friendList = new Dictionary<string, GameObject>();
+
+        JSONObject friends = obj.data.GetField("friends");
+        for (int i = 0; i < friends.Count; i++)
+        {
+            string username = myJsonParser.ElementFromJsonToString(friends[i].GetField("username").ToString())[1];
+            string isOnline = friends[i].GetField("isOnline").ToString().Replace("\"", "");
+            if (isOnline == "0")
+            {
+                GameObject newFriend = Instantiate(friendOfflinePrefab);
+                newFriend.transform.Find("Text").GetComponent<Text>().text = username;
+                newFriend.transform.SetParent(contentParent.transform, false);
+                friendList.Add(username, newFriend);
+            }
+            else if (isOnline == "1")
+            {
+                GameObject newFriend = Instantiate(friendOnlinePrefab);
+                newFriend.transform.Find("Text").GetComponent<Text>().text = username;
+                newFriend.transform.SetParent(contentParent.transform, false);
+                friendList.Add(username, newFriend);
+            }
+        }
+    }
+
+    private void DestroyAllFriendsGameObjects()
+    {
+        foreach (string key in friendList.Keys)
+        {
+            Destroy(friendList[key]);
+        }
+    }
+
 }
