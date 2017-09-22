@@ -30,8 +30,8 @@ public class ChatBox : MonoBehaviour
     public void OnCloseButtonPressed()
     {
         string friendName = gameObject.transform.Find("To").GetComponent<Text>().text;
+        Destroy(ChatObserver.chatBoxes[friendName]);
         ChatObserver.chatBoxes.Remove(friendName);
-        Destroy(gameObject);
     }
     
     public void OnMinimizeButtonPressed()
@@ -50,7 +50,7 @@ public class ChatBox : MonoBehaviour
         Debug.Log(message);
         newMessage = true;
         //to do add to messageScroll and send to node
-        SocketIO.Emit("newMessageGlobalChat", new JSONObject(myJsonParser.MessageToPersonToJson(message, gameObject.transform.Find("To").GetComponent<Text>().text)));
+        SocketIO.Emit("messageGlobalChat", new JSONObject(myJsonParser.MessageToPersonToJson(message, gameObject.transform.Find("To").GetComponent<Text>().text)));
     }
 
     public void AddChatEntry(string name, string msg, bool isMine)

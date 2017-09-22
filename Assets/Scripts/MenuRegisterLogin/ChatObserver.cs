@@ -25,11 +25,12 @@ public class ChatObserver : MonoBehaviour
         string listener = myJsonParser.ElementFromJsonToString(Obj.data["name"].ToString())[1];
         string message = myJsonParser.ElementFromJsonToString(Obj.data["message"].ToString())[1];
         if (!chatBoxes.ContainsKey(listener))
-        {
-            GameObject chat = Instantiate(chatUI);
-            chat.transform.Find("To").GetComponent<Text>().text = listener;
-            chat.transform.SetParent(gameObject.transform, false);
-            chatBoxes.Add(listener, chat);
+        {           
+            GameObject chatBoxTemp = Instantiate(chatUI);
+            chatBoxTemp.transform.parent = GameObject.Find("CanvasMenu").transform;
+            chatBoxTemp.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+            chatBoxTemp.transform.Find("To").GetComponent<Text>().text = listener;
+            chatBoxes.Add(listener, chatBoxTemp);
         }
 
         chatBoxes[listener].GetComponent<ChatBox>().inputField = message;

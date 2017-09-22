@@ -25,7 +25,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('getPhotoFriend',onGetFriendPhoto);
 	socket.on('removeFriend', onRemoveFriend);
 	socket.on('newPassword', onNewPassword);
-	socket.on('newMessageGlobalChat', onMessageGlobalChat);
+	socket.on('messageGlobalChat', onMessageGlobalChat);
 });
 
 server.listen(process.env.PORT||3000);
@@ -227,11 +227,12 @@ var onNewPassword = function(data){
 
 var onMessageGlobalChat = function(data){
     console.log("Jucatorul "+this.id+" a scris "+data["message"] + "lui "+data["destination"]);
-    var socketId = getUserOnlineSocket(data["destination"],this.id);
+    var socketId = getSocketIdOfUser(data["destination"],this.id);
     
+    console.log(data["message"]+" "+data["destination"]);
      io.to(socketId).emit("newMessageGlobalChat",{
             socket_id : this.id,
-            name :globalPlayersLogged[this.id],
+            name :allPlayersLogged[this.id],
             message : data["message"]
         }); 
     

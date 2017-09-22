@@ -1308,7 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496f1fd1a0f25e14ab1088e5054a04a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatUI: {fileID: 1739840540995030, guid: 67e72aca5e2be8548b438ef1fd453233, type: 2}
+  chatUI: {fileID: 1602648618934114, guid: 67e72aca5e2be8548b438ef1fd453233, type: 2}
 --- !u!1 &1060366896
 GameObject:
   m_ObjectHideFlags: 0
