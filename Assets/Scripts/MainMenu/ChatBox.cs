@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChatBox : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class ChatBox : MonoBehaviour
     public bool newMessage;
     public string inputField = "";
     public string senderId;
+    public GameObject newMessagePrefab;
+    public GameObject inputfield;
+
     public ArrayList entries = new ArrayList();
     JSONParser myJsonParser = new JSONParser();
 
@@ -20,16 +24,16 @@ public class ChatBox : MonoBehaviour
     {
         rect = GetComponent<RectTransform>();
         initialScale = gameObject.transform.localScale;
-        //SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        SocketIO = GameObject.Find("SetupSocketConnectionToGame").GetComponent<SocketIOComponent>();
     }
 
-    /*public void OnCloseButtonPressed()
+    public void OnCloseButtonPressed()
     {
         string friendName = gameObject.transform.Find("To").GetComponent<Text>().text;
-        ChatManager.chatList.Remove(friendName);
+        ChatObserver.chatBoxes.Remove(friendName);
         Destroy(gameObject);
     }
-    */
+    
     public void OnMinimizeButtonPressed()
     {
         gameObject.transform.localScale /= 5f;
@@ -40,9 +44,10 @@ public class ChatBox : MonoBehaviour
         gameObject.transform.localScale = initialScale;
     }
 
-    /*public void SendMessageButtonPressed()
+    public void SendMessageButtonPressed()
     {
-        string message = messageInputField.GetComponent<InputField>().text;
+        string message = inputfield.GetComponent<InputField>().text;
+        Debug.Log(message);
         newMessage = true;
         //to do add to messageScroll and send to node
         SocketIO.Emit("newMessageGlobalChat", new JSONObject(myJsonParser.MessageToPersonToJson(message, gameObject.transform.Find("To").GetComponent<Text>().text)));
@@ -50,7 +55,7 @@ public class ChatBox : MonoBehaviour
 
     public void AddChatEntry(string name, string msg, bool isMine)
     {
-        ChatEntry newEntry = new ChatEntry();
+        ChatMessage newEntry = new ChatMessage();
         newEntry.name = name;
         newEntry.message = msg;
         newEntry.isMine = isMine;
@@ -64,7 +69,8 @@ public class ChatBox : MonoBehaviour
             newMessage.GetComponent<Text>().color = Color.green;
 
         newMessage.GetComponent<Text>().text = (newEntry.timeTag + " " + newEntry.name + ": " + newEntry.message);
-    }*/
+    }
+    
     public void OnDrag(UnityEngine.EventSystems.BaseEventData eventData)
     {
         var pointerData = eventData as UnityEngine.EventSystems.PointerEventData;
@@ -74,5 +80,13 @@ public class ChatBox : MonoBehaviour
         currentPosition.x += pointerData.delta.x;
         currentPosition.y += pointerData.delta.y;
         rect.position = currentPosition;
+    }
+
+    class ChatMessage
+    {
+        public string name;
+        public string message;
+        public bool isMine;
+        public string timeTag;
     }
 }

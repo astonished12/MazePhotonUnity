@@ -137,7 +137,6 @@ public class FriendsManager : MonoBehaviour {
                 newFriend.transform.SetParent(contentParent.transform, false);
                 friendList.Add(username, newFriend);
             }
-            Debug.Log(url);
             if (url != "empty")
             {
                 SocketIO.Emit("getPhotoFriend", new JSONObject(myJsonParser.LoginUserAndUrlPhotoToJSON(username, url)));

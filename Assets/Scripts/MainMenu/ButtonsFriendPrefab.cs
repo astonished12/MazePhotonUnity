@@ -7,12 +7,21 @@ using UnityEngine.UI;
 public class ButtonsFriendPrefab : MonoBehaviour {
 
     public GameObject chatBoxPrefab;
+
     public void StartChatButton()
     {
-        GameObject chatBoxTemp = Instantiate(chatBoxPrefab);
-        chatBoxTemp.transform.parent = GameObject.Find("CanvasMenu").transform;
-        chatBoxTemp.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+        GameObject btnTmp = EventSystem.current.currentSelectedGameObject;
+        string friendName = btnTmp.transform.parent.gameObject.transform.Find("Text").GetComponent<Text>().text;
 
+        if (!ChatObserver.chatBoxes.ContainsKey(friendName))
+        {
+            GameObject chatBoxTemp = Instantiate(chatBoxPrefab);
+            chatBoxTemp.transform.parent = GameObject.Find("CanvasMenu").transform;
+            chatBoxTemp.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+            chatBoxTemp.transform.Find("To").GetComponent<Text>().text = friendName;
+            ChatObserver.chatBoxes.Add(friendName, chatBoxTemp);
+        }
+       
     }
 
     public void RemoveFriendButton()

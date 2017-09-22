@@ -25,6 +25,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('getPhotoFriend',onGetFriendPhoto);
 	socket.on('removeFriend', onRemoveFriend);
 	socket.on('newPassword', onNewPassword);
+	socket.on('newMessageGlobalChat', onMessageGlobalChat);
 });
 
 server.listen(process.env.PORT||3000);
@@ -169,6 +170,7 @@ var onGetMyFriends = function(data){
 	var idRow = mapNameInGameIdDatabase[data["username"]];
     var socketREF = this;
 
+    console.log("CE "+idRow);
     dbM.GetListOfFriendById(idRow, function(status,listOfFriends){
         if(status=="noFriends"){
             console.log("No friends for "+idRow);
@@ -221,4 +223,21 @@ var onNewPassword = function(data){
 			socketRef.emit("passwordChanged");
 		}
 	})
+}
+
+var onMessageGlobalChat = function(data){
+    console.log("Jucatorul "+this.id+" a scris "+data["message"] + "lui "+data["destination"]);
+    var socketId = getUserOnlineSocket(data["destination"],this.id);
+    
+     io.to(socketId).emit("newMessageGlobalChat",{
+            socket_id : this.id,
+            name :globalPlayersLogged[this.id],
+            message : data["message"]
+        }); 
+    
+    this.emit("newMessageGlobalChat",{
+            socket_id : this.id,
+            name : data["destination"],
+            message : data["message"]
+        });
 }

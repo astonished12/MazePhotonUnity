@@ -38,4 +38,10 @@ public class JSONParser{
     {
         return string.Format(@"{{""username"":""{0}"",""currentPassword"":""{1}"",""newPassword"":""{2}""}}", username, currentPassword, newPassword);
     }
+
+
+    public string MessageToPersonToJson(string message, string destination)
+    {
+        return string.Format(@"{{""message"":""{0}"",""destination"":""{1}""}}", message, destination);
+    }
 }
