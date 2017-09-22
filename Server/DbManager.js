@@ -181,6 +181,42 @@ var DbManager = function(){
         this.connection.query('UPDATE users SET photourl = ? WHERE username = ?', [_photourl, _username]);
     }
 
+    this.CheckIfCurrentPasswordIsOk = function(_username,_currentPassword,callback){
+        this.connection.query('SELECT * FROM users where username = ? and password = ?', [_username, _currentPassword], function(err,rows,fields){
+             if (err){
+                callback(err);
+                throw err;
+            }
+            console.log('The solution is: ', rows);
+            if(rows.length==0)
+            {
+                callback("noMatch")
+            }
+            else
+            {                
+                callback("Match",rows);
+            }
+        });
+    }
 
+    this.UpdateNewPassword = function(_username,_currentPassword,_newPassword,cb){
+
+        this.CheckIfCurrentPasswordIsOk(_username,_currentPassword,function(checkMatch){
+            if(checkMatch=="noMatch"){
+                console.log("Password doesnt match");
+                cb("noMatch");
+            }
+            else
+            {
+                console.log("aici "+_username+" "+_newPassword);
+                self.connection.query('UPDATE users SET password = ? WHERE username = ?', [_newPassword, _username] , function(err,res){
+                    if(err) throw err;
+                    cb("Match");
+                });
+                
+            }
+        });
+    }
 }
+
 module.exports = DbManager;

@@ -32,6 +32,10 @@ public class JSONParser{
         return string.Format(@"{{""username"":""{0}"",""myfriend"":""{1}""}}", myusername, posibleFriend);
     }
 
-    
+  
 
+    public string ChangePassword(string username, string currentPassword, string newPassword)
+    {
+        return string.Format(@"{{""username"":""{0}"",""currentPassword"":""{1}"",""newPassword"":""{2}""}}", username, currentPassword, newPassword);
+    }
 }

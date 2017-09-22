@@ -24,6 +24,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('GetMyFriends',onGetMyFriends);
 	socket.on('getPhotoFriend',onGetFriendPhoto);
 	socket.on('removeFriend', onRemoveFriend);
+	socket.on('newPassword', onNewPassword);
 });
 
 server.listen(process.env.PORT||3000);
@@ -204,4 +205,20 @@ var onRemoveFriend = function(data){
         dbM.RemoveFriend(mapNameInGameIdDatabase[allPlayersLogged[this.id]], data["friendName"]);
         io.sockets.emit('askfriends');
     }
+}
+
+var onNewPassword = function(data){
+	var username = data["username"];
+	var currentPassword = data["currentPassword"];
+	var newPassword = data["newPassword"];
+	console.log(username+" "+currentPassword+" "+newPassword);
+	var socketRef = this;
+	dbM.UpdateNewPassword(username,currentPassword,newPassword,function(succes){
+		if(succes=="noMatch"){
+			socketRef.emit("currentPasswordWrong");
+		}
+		if(succes=="Match"){
+			socketRef.emit("passwordChanged");
+		}
+	})
 }

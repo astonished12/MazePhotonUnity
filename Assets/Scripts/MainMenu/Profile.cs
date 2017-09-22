@@ -12,6 +12,7 @@ public class Profile : MonoBehaviour {
     public GameObject nomatches;
     public GameObject nomatchesWon;
     public RawImage output;
+    public GameObject changePasswordPanel;
     private RectTransform rect;
     private void Start()
     {
@@ -34,6 +35,14 @@ public class Profile : MonoBehaviour {
         currentPosition.x += pointerData.delta.x;
         currentPosition.y += pointerData.delta.y;
         rect.position = currentPosition;
+    }
+
+    public void ChangePassword()
+    {
+        GameObject changePanel = Instantiate(changePasswordPanel);
+        changePanel.transform.parent = GameObject.Find("CanvasMenu").transform;
+        changePanel.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+
     }
 }
 
