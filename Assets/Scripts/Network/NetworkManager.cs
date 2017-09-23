@@ -7,7 +7,7 @@ public class NetworkManager : Photon.MonoBehaviour
 {
 
     private const string roomName = "RoomName";
-    private TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
+    private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     private RoomInfo[] roomsList;
     public GameObject player;
     public GameObject standbyCamera;
@@ -61,12 +61,7 @@ public class NetworkManager : Photon.MonoBehaviour
             GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         }
         else if (PhotonNetwork.room == null)
-        {
-            // Create Room
-            if (GUI.Button(new Rect(100, 100, 250, 100), "Start Server"))
-            {
-                PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = 2, IsOpen = true, IsVisible = true }, lobbyName);
-            }
+        {           
 
             // Join Room
             if (roomsList != null)
@@ -81,6 +76,26 @@ public class NetworkManager : Photon.MonoBehaviour
             }
         }
        
+    }
+
+    public static void CreateRoom(string roomName,int _maxPlayers)
+    {
+        PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = (byte)_maxPlayers, IsOpen = true, IsVisible = true }, lobbyName);
+    }
+
+    public void FindServers()
+    {
+        // Join Room
+        if (roomsList != null)
+        {
+            for (int i = 0; i < roomsList.Length; i++)
+            {
+                if (GUI.Button(new Rect(100, 250 + (110 * i), 250, 100), "Join " + roomsList[i].Name))
+                {
+                    PhotonNetwork.JoinRoom(roomsList[i].Name);
+                }
+            }
+        }
     }
 
     void OnConnectedToMaster()
