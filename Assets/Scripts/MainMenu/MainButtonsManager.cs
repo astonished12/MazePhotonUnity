@@ -7,6 +7,7 @@ public class MainButtonsManager : MonoBehaviour {
 
     public GameObject profilePanel;
     public GameObject newRoomPanel;
+    public GameObject findserversPanel;
 
     public void ProfileButtonPressed()
     {
@@ -22,5 +23,10 @@ public class MainButtonsManager : MonoBehaviour {
         newRoomPanelTmp.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
     }
 
-   
+    public void FindServers()
+    {
+        GameObject findserversPanelTmp = Instantiate(findserversPanel);
+        findserversPanelTmp.transform.parent = GameObject.Find("CanvasMenu").transform;
+        findserversPanelTmp.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+    }
 }

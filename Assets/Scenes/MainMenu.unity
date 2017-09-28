@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1076010614}
+      - m_Target: {fileID: 1013285734}
         m_MethodName: FindServers
         m_Mode: 1
         m_Arguments:
@@ -1289,6 +1289,8 @@ MonoBehaviour:
   profilePanel: {fileID: 1472306704334114, guid: 0379a09804058be4a8601ed350231776,
     type: 2}
   newRoomPanel: {fileID: 1218256531054284, guid: 841f7cd3373bd2c479a9e83b0c22af7d,
+    type: 2}
+  findserversPanel: {fileID: 1815436769102104, guid: 7c4e74d429a36b146a520493f971aafa,
     type: 2}
 --- !u!114 &1013285735
 MonoBehaviour:

@@ -15,10 +15,10 @@ public class NetworkCharacter : Photon.PunBehaviour {
         {
             Debug.Log("YOu forgot to set the animator");
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+    
+    // Update is called once per frame
+    void Update () {
         if (photonView.isMine) // do nothing our characer inputs is moving us
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -29,7 +29,7 @@ public class NetworkCharacter : Photon.PunBehaviour {
             transform.position = Vector3.Lerp(transform.position, realPositon, 0.1f);
             transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, 0.1f);
         }
-	}
+    }
 
     void OnPhotonSerializeView(PhotonStream photonStream,PhotonMessageInfo info)
     {

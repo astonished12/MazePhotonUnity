@@ -8,7 +8,7 @@ public class NetworkManager : Photon.MonoBehaviour
 
     private const string roomName = "RoomName";
     private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
-    private RoomInfo[] roomsList;
+    public static RoomInfo[] roomsList;
     public GameObject player;
     public GameObject standbyCamera;
 
@@ -54,49 +54,20 @@ public class NetworkManager : Photon.MonoBehaviour
         }
     }
 
-    void OnGUI()
-    {
-        if (!PhotonNetwork.connected)
-        {
-            GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-        }
-        else if (PhotonNetwork.room == null)
-        {           
-
-            // Join Room
-            if (roomsList != null)
-            {
-                for (int i = 0; i < roomsList.Length; i++)
-                {
-                    if (GUI.Button(new Rect(100, 250 + (110 * i), 250, 100), "Join " + roomsList[i].Name))
-                    {
-                        PhotonNetwork.JoinRoom(roomsList[i].Name);
-                    }
-                }
-            }
-        }
-       
-    }
+  
 
     public static void CreateRoom(string roomName,int _maxPlayers)
     {
         PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = (byte)_maxPlayers, IsOpen = true, IsVisible = true }, lobbyName);
     }
 
-    public void FindServers()
+    public static void JoinRoom(string roomName)
     {
-        // Join Room
-        if (roomsList != null)
-        {
-            for (int i = 0; i < roomsList.Length; i++)
-            {
-                if (GUI.Button(new Rect(100, 250 + (110 * i), 250, 100), "Join " + roomsList[i].Name))
-                {
-                    PhotonNetwork.JoinRoom(roomsList[i].Name);
-                }
-            }
-        }
+        Debug.Log("CIneva da  JOIN");
+        PhotonNetwork.JoinRoom(roomName);
+
     }
+         
 
     void OnConnectedToMaster()
     {

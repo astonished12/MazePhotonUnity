@@ -109,23 +109,26 @@ var DbManager = function(){
         });        
     } 
     this.GetListOfFriendById = function(myId, cb){
-        //Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = 5) and users.idUser = friends.idFriend ;
-        console.log("IDUL este "+myId);
-        this.connection.query('Select distinct idFriend,username,isOnline,photourl from themaze.users join themaze.friends on themaze.users.idUser = themaze.friends.idFriend where users.idUser In (SELECT idFriend FROM themaze.users u natural join themaze.friends f where u.idUser = ?) and themaze.users.idUser = themaze.friends.idFriend',myId, function(err, rows, fields) {
-            if (err)
-                cb(err);
+            //Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = 5) and users.idUser = friends.idFriend ;
+            console.log("IDUL este "+myId);
+            this.connection.query('Select distinct idFriend,username,isOnline,photourl from themaze.users join themaze.friends on themaze.users.idUser = themaze.friends.idFriend where users.idUser In (SELECT idFriend FROM themaze.users u natural join themaze.friends f where u.idUser = ?) and themaze.users.idUser = themaze.friends.idFriend',myId, function(err, rows, fields) {
+                if (err)
+                    cb(err);
 
-            console.log('The solution is: ', rows);
-            if(rows.length==0)
-            {
-                cb("noFriends")
-            }
-            else
-            {                
-                cb("Friends",rows);
-            }
+                console.log('The solution is: ', rows);
+                if(rows!==undefined){
+                if(rows.length==0)
+                {
+                    cb("noFriends")
+                }
+                else
+                {                
+                    cb("Friends",rows);
+                };
+            };
         });
     }
+    
     this.GetIdFromUserByName = function(nameUser, callback){
         var complete = false;
         this.connection.query('SELECT * from users where username=?',nameUser, function(err, rows, fields) {
