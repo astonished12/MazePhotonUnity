@@ -22,7 +22,11 @@ public class NetworkCharacter : Photon.PunBehaviour {
         if (photonView.isMine) // do nothing our characer inputs is moving us
         {
             if (Input.GetKeyDown(KeyCode.R))
-                GetComponent<PhotonView>().RPC("SpawnHelper", PhotonTargets.All,transform.position);
+            {
+                GetComponent<PhotonView>().RPC("SpawnHelper", PhotonTargets.All, transform.position);
+            }
+          
+            
         }
         else
         {
@@ -52,4 +56,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
             myAnimator.SetBool("Jumping", (bool)photonStream.ReceiveNext());
         }
     }
+
+   
+
+    
 }

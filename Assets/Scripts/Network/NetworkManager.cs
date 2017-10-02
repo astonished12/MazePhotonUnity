@@ -33,7 +33,7 @@ public class NetworkManager : Photon.MonoBehaviour
         }
         else
         {
-            PhotonNetwork.ConnectUsingSettings("v4.2");
+            PhotonNetwork.ConnectUsingSettings("v4.3");
         }
     }
     public GameObject worldGen;
@@ -63,9 +63,7 @@ public class NetworkManager : Photon.MonoBehaviour
 
     public static void JoinRoom(string roomName)
     {
-        Debug.Log("CIneva da  JOIN");
         PhotonNetwork.JoinRoom(roomName);
-
     }
          
 

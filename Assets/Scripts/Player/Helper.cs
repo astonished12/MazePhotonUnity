@@ -13,4 +13,6 @@ public class Helper : Photon.MonoBehaviour {
         GameObject tmp = Instantiate(helpPet, position,Quaternion.identity) as GameObject;
       
     }
+
+   
 }

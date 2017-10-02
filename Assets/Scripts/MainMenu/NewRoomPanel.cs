@@ -20,9 +20,8 @@ public class NewRoomPanel : MonoBehaviour {
     }
     public void StartRoom()
     {
-        //NetworkManager.CreateRoom()
         nameroom = roomName.GetComponent<InputField>().text.ToString();
-        Debug.Log(nameroom);
+
         playersNO = System.Int32.Parse(maxPlayers.GetComponent<InputField>().text.ToString());
         sizeLab = System.Int32.Parse(sizeMaze.GetComponent<InputField>().text.ToString());
         if (sizeLab % 2 == 1)
@@ -32,6 +31,7 @@ public class NewRoomPanel : MonoBehaviour {
         if (CheckValidData(nameroom, playersNO, sizeLab))
         {
             NetworkManager.CreateRoom(nameroom, playersNO);
+            Destroy(gameObject);
         }
         else
         {

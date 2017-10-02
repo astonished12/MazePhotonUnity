@@ -845,7 +845,7 @@ public static class PhotonNetwork
         }
     }
 
-	/// <summary>If true, PUN will use a Stopwatch to measure time since start/connect. This is more precise than the Environment.TickCount used by default.</summary>
+    /// <summary>If true, PUN will use a Stopwatch to measure time since start/connect. This is more precise than the Environment.TickCount used by default.</summary>
     private static bool UsePreciseTimer = false;
     static Stopwatch startupStopwatch;
 
@@ -1109,10 +1109,10 @@ public static class PhotonNetwork
         }
         #endif
 
-		if (PhotonServerSettings != null)
-		{
-			Application.runInBackground = PhotonServerSettings.RunInBackground;
-		}
+        if (PhotonServerSettings != null)
+        {
+            Application.runInBackground = PhotonServerSettings.RunInBackground;
+        }
 
         // Set up a MonoBehaviour to run Photon, and hide it
         GameObject photonGO = new GameObject();
@@ -1214,17 +1214,17 @@ public static class PhotonNetwork
             return false;
         }
 
-		// only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
-		if (PhotonNetwork.logLevel == PhotonLogLevel.ErrorsOnly)
-		{
-        	PhotonNetwork.logLevel = PhotonServerSettings.PunLogging;
-		}
+        // only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
+        if (PhotonNetwork.logLevel == PhotonLogLevel.ErrorsOnly)
+        {
+            PhotonNetwork.logLevel = PhotonServerSettings.PunLogging;
+        }
 
-		// only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
-		if (PhotonNetwork.networkingPeer.DebugOut == DebugLevel.ERROR)
-		{
-        	PhotonNetwork.networkingPeer.DebugOut = PhotonServerSettings.NetworkLogging;
-		}
+        // only apply Settings if logLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
+        if (PhotonNetwork.networkingPeer.DebugOut == DebugLevel.ERROR)
+        {
+            PhotonNetwork.networkingPeer.DebugOut = PhotonServerSettings.NetworkLogging;
+        }
 
 
         SwitchToProtocol(PhotonServerSettings.Protocol);
@@ -1308,12 +1308,12 @@ public static class PhotonNetwork
         return networkingPeer.Connect(networkingPeer.MasterServerAddress, ServerConnection.MasterServer);
     }
 
-	/// <summary>Can be used to reconnect to the master server after a disconnect.</summary>
-	/// <remarks>
-	/// After losing connection, you can use this to connect a client to the region Master Server again.
-	/// Cache the room name you're in and use ReJoin(roomname) to return to a game.
-	/// Common use case: Press the Lock Button on a iOS device and you get disconnected immediately.
-	/// </remarks>
+    /// <summary>Can be used to reconnect to the master server after a disconnect.</summary>
+    /// <remarks>
+    /// After losing connection, you can use this to connect a client to the region Master Server again.
+    /// Cache the room name you're in and use ReJoin(roomname) to return to a game.
+    /// Common use case: Press the Lock Button on a iOS device and you get disconnected immediately.
+    /// </remarks>
     public static bool Reconnect()
     {
         if (string.IsNullOrEmpty(networkingPeer.MasterServerAddress))
@@ -1973,21 +1973,21 @@ public static class PhotonNetwork
     }
 
 
-	/// <summary>Can be used to return to a room after a disconnect and reconnect.</summary>
-	/// <remarks>
-	/// After losing connection, you might be able to return to a room and continue playing,
-	/// if the client is reconnecting fast enough. Use Reconnect() and this method.
-	/// Cache the room name you're in and use ReJoin(roomname) to return to a game.
-	///
-	/// Note: To be able to ReJoin any room, you need to use UserIDs!
-	/// You also need to set RoomOptions.PlayerTtl.
-	///
-	/// <b>Important: Instantiate() and use of RPCs is not yet supported.</b>
-	/// The ownership rules of PhotonViews prevent a seamless return to a game.
-	/// Use Custom Properties and RaiseEvent with event caching instead.
-	///
-	/// Common use case: Press the Lock Button on a iOS device and you get disconnected immediately.
-	/// </remarks>
+    /// <summary>Can be used to return to a room after a disconnect and reconnect.</summary>
+    /// <remarks>
+    /// After losing connection, you might be able to return to a room and continue playing,
+    /// if the client is reconnecting fast enough. Use Reconnect() and this method.
+    /// Cache the room name you're in and use ReJoin(roomname) to return to a game.
+    ///
+    /// Note: To be able to ReJoin any room, you need to use UserIDs!
+    /// You also need to set RoomOptions.PlayerTtl.
+    ///
+    /// <b>Important: Instantiate() and use of RPCs is not yet supported.</b>
+    /// The ownership rules of PhotonViews prevent a seamless return to a game.
+    /// Use Custom Properties and RaiseEvent with event caching instead.
+    ///
+    /// Common use case: Press the Lock Button on a iOS device and you get disconnected immediately.
+    /// </remarks>
     public static bool ReJoinRoom(string roomName)
     {
         if (offlineMode)

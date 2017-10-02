@@ -39,4 +39,7 @@ MonoBehaviour:
   - receiveSeed
   - ReceiveSeed
   - SpawnHelper
+  - SendChatMessage
+  - SendChatMessage1
+  - SendMessageChatInRoom
   DisableAutoOpenWizard: 1
