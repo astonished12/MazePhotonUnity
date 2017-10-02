@@ -30,11 +30,14 @@ public class MazeGenerator : MonoBehaviour {
 
     public GameObject masterClient;
     public int realSeed;
+    public int realSize;
     void Update()
     {
         if (PhotonNetwork.inRoom && realSeed != 0)
         { //Make sure you are connected and have received the seed
           //Generate world based off of the seed
+            Height = realSize;
+            Width = realSize;
             CreateMazeWallsByMatrix(Height,Width,realSeed);
             realSeed = 0;
         }
@@ -46,7 +49,12 @@ public class MazeGenerator : MonoBehaviour {
       //This RPC is called automatically since it's a "buffered" rpc
         realSeed = seed;
     }
-
+    [PunRPC]
+    void ReceiveSize(int size)
+    { //Get the seed from the master client in an RPC
+      //This RPC is called automatically since it's a "buffered" rpc
+        realSize = size;
+    }
 
     public void CreateMazeWallsByMatrix(int Height,int Width,int _seed)
     {

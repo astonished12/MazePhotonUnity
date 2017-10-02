@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityStandardAssets.Characters.FirstPerson;
 using System;
+using System.Collections.Generic;
 
 public class NetworkManager : Photon.MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class NetworkManager : Photon.MonoBehaviour
     public GameObject standbyCamera;
 
     public bool offlinemode = false;
-    
+    public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
     //Map sync
     bool sent;
     int seed;
@@ -48,7 +49,11 @@ public class NetworkManager : Photon.MonoBehaviour
             sent = true;
             seed = Guid.NewGuid().GetHashCode();
             worldGen.GetComponent<MazeGenerator>().realSeed = seed;
+            worldGen.GetComponent<MazeGenerator>().realSize = mapRoomNameSize[PhotonNetwork.room.Name];
+
             worldGen.GetComponent<PhotonView>().RPC("ReceiveSeed", PhotonTargets.OthersBuffered, seed);
+            worldGen.GetComponent<PhotonView>().RPC("ReceiveSize", PhotonTargets.OthersBuffered, mapRoomNameSize[PhotonNetwork.room.Name]);
+
             //Others buffered means that anyone who joins later will get this RPC
 
         }
@@ -56,9 +61,10 @@ public class NetworkManager : Photon.MonoBehaviour
 
   
 
-    public static void CreateRoom(string roomName,int _maxPlayers)
+    public static void CreateRoom(string roomName,int _maxPlayers,int sizeMaze)
     {
-        PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = (byte)_maxPlayers, IsOpen = true, IsVisible = true }, lobbyName);
+        mapRoomNameSize.Add(roomName, sizeMaze);
+        PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = (byte)_maxPlayers, IsOpen = true, IsVisible = true, RealSize = sizeMaze }, lobbyName);
     }
 
     public static void JoinRoom(string roomName)

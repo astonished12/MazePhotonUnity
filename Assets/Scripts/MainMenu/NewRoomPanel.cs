@@ -30,7 +30,7 @@ public class NewRoomPanel : MonoBehaviour {
         }
         if (CheckValidData(nameroom, playersNO, sizeLab))
         {
-            NetworkManager.CreateRoom(nameroom, playersNO);
+            NetworkManager.CreateRoom(nameroom, playersNO, sizeLab);
             Destroy(gameObject);
         }
         else
