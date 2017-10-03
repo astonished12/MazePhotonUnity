@@ -618,7 +618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: {fileID: 1957300937548560}
-  maxPlayers: {fileID: 1693109901467884}
+  maxPlayers: {fileID: 1717331158527548}
   sizeMaze: {fileID: 1693109901467884}
   msgPrompt: {fileID: 1007364961351692, guid: 5f5af3ce3966882468cd14ff204ff043, type: 2}
 --- !u!114 &114319509434262748

@@ -37,7 +37,7 @@ public class ChatRoom : MonoBehaviour {
     }
     private void OnGUI()
     {
-        if (PhotonNetwork.inRoom)
+        if (PhotonNetwork.inRoom && PhotonNetwork.room.PlayerCount == PhotonNetwork.room.MaxPlayers)
             Draw();
     }
     //draw the chat box in size relative to your GUIlayout

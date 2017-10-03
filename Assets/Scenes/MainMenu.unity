@@ -1515,6 +1515,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1646183883853446, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
   standbyCamera: {fileID: 1508680195}
+  exit: {fileID: 1719415940760738, guid: 3fe157a7bceb5044fb22895693d121ef, type: 2}
+  waitPanel: {fileID: 1912721455382342, guid: 331c8865de48927459bbf8ce4a2ab0e0, type: 2}
   offlinemode: 0
   worldGen: {fileID: 1389489130}
 --- !u!114 &1076010616
@@ -2080,6 +2082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b35a87dfae85e4d935bace57829fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellsGroundPositionSpawn: []
   Height: 15
   Width: 15
   Wall: {fileID: 1619283389909698, guid: 62d4aceb9a4ec7540928da1e273f1add, type: 2}
@@ -2088,6 +2091,7 @@ MonoBehaviour:
   wallLength: 6
   masterClient: {fileID: 1076010612}
   realSeed: 0
+  realSize: 0
 --- !u!114 &1389489133
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class MazeGenerator : MonoBehaviour {
     private DFSAlgoritmMaze BuilderMaze;
     private Vector3 IntialPositon;
     private Vector3 IntialPositonRoof;
-
+    public List<Vector3> cellsGroundPositionSpawn;
     public int Height, Width;
     public GameObject Wall;
     public GameObject WallRoof;
@@ -24,8 +24,8 @@ public class MazeGenerator : MonoBehaviour {
     {
         BuilderMaze = GetComponent<DFSAlgoritmMaze>();
         IntialPositon = new Vector3((-Width / 2) + wallLength / 2, 0.0f, (-Height / 2) + wallLength / 2);
-        IntialPositonRoof = new Vector3(0.0f, wallLength,  -wallLength / 2);
-
+        IntialPositonRoof = new Vector3(-wallLength/2-1, wallLength,  -wallLength-1);
+        cellsGroundPositionSpawn = new List<Vector3>();
     }
 
     public GameObject masterClient;
@@ -66,15 +66,17 @@ public class MazeGenerator : MonoBehaviour {
         GameObject temp;
         int index = 0;
 
-        /*for (int i = 0; i < Height; i++) // acoperis
+        for (int i = 0; i < Height; i++) // acoperis
         {
             for (int j = 0; j < Width; j++)
             {
                 myPostion = new Vector3(IntialPositonRoof.x + (i * wallLength), IntialPositonRoof.y, IntialPositonRoof.z + (j * wallLength));
-                temp = Instantiate(WallRoof, myPostion, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
-                temp.transform.parent = roof.transform;
+                //temp = Instantiate(WallRoof, myPostion, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
+                Vector3 positonOnGround = new Vector3(myPostion.x, 2.3f, myPostion.z);
+                cellsGroundPositionSpawn.Add(positonOnGround);
+                //temp.transform.parent = roof.transform;
             }
-        }*/
+        }
 
         for (int i = 0; i < Height; i++) // pe linii -- x
         {

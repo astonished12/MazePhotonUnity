@@ -42,4 +42,6 @@ MonoBehaviour:
   - SendChatMessage
   - SendChatMessage1
   - SendMessageChatInRoom
+  - ReceiveSize
+  - GenerateExit
   DisableAutoOpenWizard: 1

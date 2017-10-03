@@ -12,9 +12,13 @@ public class NetworkManager : Photon.MonoBehaviour
     public static RoomInfo[] roomsList;
     public GameObject player;
     public GameObject standbyCamera;
-
+    public GameObject exit;
+    public GameObject waitPanel;
+    private GameObject waitPanelInitilized;
     public bool offlinemode = false;
     public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
+
+    private bool gamestart=false;
     //Map sync
     bool sent;
     int seed;
@@ -55,7 +59,14 @@ public class NetworkManager : Photon.MonoBehaviour
             worldGen.GetComponent<PhotonView>().RPC("ReceiveSize", PhotonTargets.OthersBuffered, mapRoomNameSize[PhotonNetwork.room.Name]);
 
             //Others buffered means that anyone who joins later will get this RPC
+          
 
+        }
+        if (PhotonNetwork.inRoom && PhotonNetwork.room.PlayerCount == PhotonNetwork.room.MaxPlayers && gamestart ==false)
+        {
+            Destroy(waitPanelInitilized);
+            gamestart = true;
+            GameIsReadyToPlay();
         }
     }
 
@@ -92,17 +103,40 @@ public class NetworkManager : Photon.MonoBehaviour
     void OnJoinedRoom()
     {
         Debug.Log("Connected to Room");
+        if (PhotonNetwork.room.PlayerCount < PhotonNetwork.room.MaxPlayers)
+        {
+            waitPanelInitilized = Instantiate(waitPanel);
+            waitPanelInitilized.transform.parent = GameObject.Find("CanvasMenu").transform;
+            waitPanelInitilized.gameObject.transform.position = GameObject.Find("CanvasMenu").transform.position;
+        }
+
+    }
+
+    void GameIsReadyToPlay()
+    {
+       
         //CREATE SPAWN POINTS
         standbyCamera.SetActive(false);
-        Vector3 initialSpawnPoint = new Vector3((-worldGen.GetComponent<MazeGenerator>().Width / 2+1f) + worldGen.GetComponent<MazeGenerator>().wallLength / 2, 0.0f, (-worldGen.GetComponent<MazeGenerator>().Height / 2) + worldGen.GetComponent<MazeGenerator>().wallLength / 2);
+        Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0];
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
         myPlayer.transform.Find("Crosshair").gameObject.SetActive(true);
         myPlayer.GetComponent<FirstPersonController>().enabled = true;
         myPlayer.GetComponent<PlayerMovement>().enabled = true;
         myPlayer.GetComponent<NetworkCharacter>().enabled = true;
+        if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
+            StartCoroutine(GenerateExitByCallingRpc());
+    }
+    IEnumerator GenerateExitByCallingRpc()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.AllBuffered, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
 
+    }
 
-        //AM MODIFICAT CEVA
+    [PunRPC]
+    void GenerateExit(Vector3 initialSpawnPoint)
+    {
+        Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
     }
 }
