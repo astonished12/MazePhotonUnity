@@ -1513,7 +1513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cf9205532c9afe42b8339d6309f4c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1646183883853446, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
+  player: {fileID: 1420901299743472, guid: 0b36f48aae393f6479700d294a0a1f45, type: 2}
   standbyCamera: {fileID: 1508680195}
   exit: {fileID: 1719415940760738, guid: 3fe157a7bceb5044fb22895693d121ef, type: 2}
   waitPanel: {fileID: 1912721455382342, guid: 331c8865de48927459bbf8ce4a2ab0e0, type: 2}

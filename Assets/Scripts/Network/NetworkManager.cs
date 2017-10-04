@@ -66,7 +66,7 @@ public class NetworkManager : Photon.MonoBehaviour
         {
             Destroy(waitPanelInitilized);
             gamestart = true;
-            GameIsReadyToPlay();
+            StartCoroutine(GameIsReadyToPlay());
         }
     }
 
@@ -112,25 +112,31 @@ public class NetworkManager : Photon.MonoBehaviour
 
     }
 
-    void GameIsReadyToPlay()
+    IEnumerator GameIsReadyToPlay()
     {
        
         //CREATE SPAWN POINTS
         standbyCamera.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+
         Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0];
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
-        myPlayer.transform.Find("Crosshair").gameObject.SetActive(true);
+        myPlayer.transform.Find("HealthCrosshair").gameObject.SetActive(true);
         myPlayer.GetComponent<FirstPersonController>().enabled = true;
         myPlayer.GetComponent<PlayerMovement>().enabled = true;
         myPlayer.GetComponent<NetworkCharacter>().enabled = true;
+        myPlayer.GetComponent<Health>().enabled = true;
+
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
             StartCoroutine(GenerateExitByCallingRpc());
     }
+
+
     IEnumerator GenerateExitByCallingRpc()
     {
         yield return new WaitForSeconds(0.5f);
-        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.AllBuffered, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
+        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
 
     }
 
