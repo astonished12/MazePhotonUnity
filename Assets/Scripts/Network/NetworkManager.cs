@@ -126,6 +126,7 @@ public class NetworkManager : Photon.MonoBehaviour
         myPlayer.GetComponent<FirstPersonController>().enabled = true;
         myPlayer.GetComponent<PlayerMovement>().enabled = true;
         myPlayer.GetComponent<NetworkCharacter>().enabled = true;
+        myPlayer.GetComponent<PlayerShoting>().enabled = true;
         myPlayer.GetComponent<Health>().enabled = true;
 
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)

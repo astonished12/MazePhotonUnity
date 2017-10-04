@@ -7,7 +7,9 @@ public class Health : MonoBehaviour {
     public int startingHealth = 100;                            // The amount of health the player starts the game with.
     public int currentHealth;                                   // The current health the player has.
     public Slider healthSlider;                                 // Reference to the UI's health bar.
-    public Image damageImage;                                   // Reference to an image to flash on the screen on being hurt.
+    public Image damageImage;
+    public RawImage avatarImg;
+    // Reference to an image to flash on the screen on being hurt.
     //public AudioClip deathClip;                                 // The audio clip to play when the player dies.
     public float flashSpeed = 5f;                               // The speed the damageImage will fade at.
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);     // The colour the damageImage is set to, to flash.
@@ -27,6 +29,8 @@ public class Health : MonoBehaviour {
         anim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
         playerMovement = GetComponent<PlayerMovement>();
+        avatarImg.texture = GameObject.Find("CanvasMenu").transform.GetChild(2).gameObject.transform.GetChild(0).GetComponent<RawImage>().texture;
+
         //playerShooting = GetComponentInChildren<PlayerShooting>();
 
         // Set the initial health of the player.
@@ -55,6 +59,7 @@ public class Health : MonoBehaviour {
     }
 
 
+    [PunRPC]
     public void TakeDamage(int amount)
     {
         // Set the damaged flag so the screen will flash.
@@ -96,5 +101,6 @@ public class Health : MonoBehaviour {
         // Turn off the movement and shooting scripts.
         playerMovement.enabled = false;
         //playerShooting.enabled = false;
+        Debug.Log("Obiectul " + gameObject.name + " a murit");
     }
 }
