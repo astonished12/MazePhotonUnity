@@ -45,6 +45,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
             
             photonStream.SendNext(myAnimator.GetFloat("Speed"));
             photonStream.SendNext(myAnimator.GetBool("Jumping"));
+            photonStream.SendNext(myAnimator.GetBool("Die"));
+
 
         }
         else //sau e altul
@@ -54,6 +56,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
             realRotation = (Quaternion)photonStream.ReceiveNext();
             myAnimator.SetFloat("Speed", (float)photonStream.ReceiveNext());
             myAnimator.SetBool("Jumping", (bool)photonStream.ReceiveNext());
+            myAnimator.SetBool("Die", (bool)photonStream.ReceiveNext());
+
         }
     }
 

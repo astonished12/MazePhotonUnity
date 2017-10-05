@@ -45,4 +45,6 @@ MonoBehaviour:
   - ReceiveSize
   - GenerateExit
   - TakeDamage
+  - PlayerDies
+  - PlayerRespawns
   DisableAutoOpenWizard: 1

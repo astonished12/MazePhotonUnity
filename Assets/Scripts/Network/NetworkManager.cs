@@ -11,7 +11,7 @@ public class NetworkManager : Photon.MonoBehaviour
     private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     public static RoomInfo[] roomsList;
     public GameObject player;
-    public GameObject standbyCamera;
+    public  static GameObject standbyCamera;
     public GameObject exit;
     public GameObject waitPanel;
     private GameObject waitPanelInitilized;
@@ -19,11 +19,15 @@ public class NetworkManager : Photon.MonoBehaviour
     public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
 
     private bool gamestart=false;
+    private Vector3 hiddenPosition = new Vector3(-200f, -200f, -200f);
     //Map sync
     bool sent;
     int seed;
 
-
+    private void Awake()
+    {
+        standbyCamera = GameObject.FindGameObjectWithTag("MainCamera");
+     }
     void Start()
     {
         Connect();
@@ -146,4 +150,18 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
     }
+
+    [PunRPC]
+    void PlayerDies()
+    {
+        transform.position = hiddenPosition;
+    }
+
+    [PunRPC]
+    void PlayerRespawns()
+    {
+        transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0]; 
+    }
+
+
 }

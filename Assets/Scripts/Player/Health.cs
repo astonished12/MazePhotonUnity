@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class Health : MonoBehaviour {
     public int startingHealth = 100;                            // The amount of health the player starts the game with.
@@ -19,6 +20,8 @@ public class Health : MonoBehaviour {
     AudioSource playerAudio;                                    // Reference to the AudioSource component.
     PlayerMovement playerMovement;                              // Reference to the player's movement.
     PlayerShoting playerShooting;                              // Reference to the PlayerShooting script.
+    FirstPersonController controler;
+    NetworkCharacter playerNetworkChracter;
     bool isDead;                                                // Whether the player is dead.
     public bool damaged;                                               // True when the player gets damaged.
 
@@ -29,6 +32,8 @@ public class Health : MonoBehaviour {
         anim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
         playerMovement = GetComponent<PlayerMovement>();
+        controler = GetComponent<FirstPersonController>();
+        playerNetworkChracter = GetComponent<NetworkCharacter>();
         avatarImg.texture = GameObject.Find("CanvasMenu").transform.GetChild(2).gameObject.transform.GetChild(0).GetComponent<RawImage>().texture;
 
         playerShooting = GetComponentInChildren<PlayerShoting>();
@@ -85,6 +90,11 @@ public class Health : MonoBehaviour {
 
     void Death()
     {
+
+
+
+        playerNetworkChracter.GetComponent<PhotonView>().RPC("PlayerDies", PhotonTargets.All);
+
         // Set the death flag so this function won't be called again.
         isDead = true;
 
@@ -99,8 +109,42 @@ public class Health : MonoBehaviour {
         playerAudio.Play();
 
         // Turn off the movement and shooting scripts.
-        playerMovement.enabled = false;
-        playerShooting.enabled = false;
-        Debug.Log("Obiectul " + gameObject.name + " a murit");
+        gameObject.transform.Find("FirstPersonCharacter").gameObject.SetActive(false);
+        gameObject.transform.Find("HealthCrosshair").gameObject.SetActive(false);
+        gameObject.GetComponent<FirstPersonController>().enabled = false;
+        gameObject.GetComponent<PlayerMovement>().enabled = false;
+        gameObject.GetComponent<NetworkCharacter>().enabled = false;
+        gameObject.GetComponent<PlayerShoting>().enabled = false;
+        gameObject.GetComponent<Health>().enabled = false;
+        
+        NetworkManager.standbyCamera.SetActive(true);
+
+
+        StartCoroutine("SetDeadOff");
     }
+
+    IEnumerator SetDeadOff()
+    {
+        yield return new WaitForSeconds(1.5f);
+        anim.SetBool("Die", false);
+        Respawn();
+
+    }
+
+    void Respawn()
+    {
+        playerNetworkChracter.GetComponent<PhotonView>().RPC("PlayerRespawns", PhotonTargets.All);
+
+        // Turn on the movement and shooting scripts.
+        gameObject.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
+        gameObject.transform.Find("HealthCrosshair").gameObject.SetActive(true);
+        gameObject.GetComponent<FirstPersonController>().enabled = true;
+        gameObject.GetComponent<PlayerMovement>().enabled = true;
+        gameObject.GetComponent<NetworkCharacter>().enabled = true;
+        gameObject.GetComponent<PlayerShoting>().enabled = true;
+        gameObject.GetComponent<Health>().enabled = true;
+
+        NetworkManager.standbyCamera.SetActive(false);
+    }
+
 }
