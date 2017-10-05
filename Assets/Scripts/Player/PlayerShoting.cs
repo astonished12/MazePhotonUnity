@@ -7,6 +7,13 @@ public class PlayerShoting : MonoBehaviour {
 
     private float fireRate = 0.5f;
     private float cooldown = 0f;
+    private AudioSource playerAudio;                                   // Reference to the AudioSource component.
+    public AudioClip shotClip;
+    void Start()
+    {
+        playerAudio = GetComponent<AudioSource>();
+    }
+
     void Update()
     {
 
@@ -32,6 +39,8 @@ public class PlayerShoting : MonoBehaviour {
         {
             Debug.Log("we hit " + hitInfo.transform.name);
             Health h = hitInfo.transform.GetComponent<Health>();
+            playerAudio.clip = shotClip;
+            playerAudio.Play();
             h.GetComponent<PhotonView>().RPC("TakeDamage",PhotonTargets.All,10);
         }
 
