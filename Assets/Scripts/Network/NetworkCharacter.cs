@@ -6,6 +6,14 @@ public class NetworkCharacter : Photon.PunBehaviour {
     Vector3 realPositon = Vector3.zero;
     Quaternion realRotation = Quaternion.identity;
     Animator myAnimator;
+    private Vector3 hiddenPosition = new Vector3(-200f, -200f, -200f);
+
+
+    public delegate void Respawn(float time);
+    public event Respawn RespawnMe;
+    public delegate void SendMessageOnNetwork(string MessageOverlay);
+    public event SendMessageOnNetwork SendNetworkMessage;
+
 
     float moveFlow = 0.1f;
     // Use this for initialization
@@ -46,6 +54,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
             photonStream.SendNext(myAnimator.GetFloat("Speed"));
             photonStream.SendNext(myAnimator.GetBool("Jumping"));
             photonStream.SendNext(myAnimator.GetBool("Die"));
+            photonStream.SendNext(myAnimator.GetBool("Respawn"));
+
 
 
         }
@@ -57,11 +67,14 @@ public class NetworkCharacter : Photon.PunBehaviour {
             myAnimator.SetFloat("Speed", (float)photonStream.ReceiveNext());
             myAnimator.SetBool("Jumping", (bool)photonStream.ReceiveNext());
             myAnimator.SetBool("Die", (bool)photonStream.ReceiveNext());
+            myAnimator.SetBool("Respawn", (bool)photonStream.ReceiveNext());
+
 
         }
     }
 
    
 
-    
+
+
 }

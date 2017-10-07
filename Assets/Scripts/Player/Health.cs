@@ -26,6 +26,11 @@ public class Health : MonoBehaviour {
     public bool damaged;                                               // True when the player gets damaged.
 
 
+    public delegate void Respawn(float time);
+    public event Respawn RespawnMe;
+    public delegate void SendMessageOverNetwork(string MessageOverlay);
+    public event SendMessageOverNetwork SendNetworkMessage;
+
     void Awake()
     {
         // Setting up the references.
@@ -50,7 +55,6 @@ public class Health : MonoBehaviour {
         {
             // ... set the colour of the damageImage to the flash colour.
             damageImage.color = flashColour;
-            TakeDamage(10);
         }
         // Otherwise...
         else
@@ -62,10 +66,16 @@ public class Health : MonoBehaviour {
         // Reset the damaged flag.
         damaged = false;
     }
+    void ResetValues()
+    {
+        currentHealth = startingHealth;
+        healthSlider.value = currentHealth;
 
+
+    }
 
     [PunRPC]
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount,string enemyName)
     {
         // Set the damaged flag so the screen will flash.
         damaged = true;
@@ -83,18 +93,32 @@ public class Health : MonoBehaviour {
         if (currentHealth <= 0 && !isDead)
         {
             // ... it should die.
-            Death();
+
+            if (SendNetworkMessage != null)
+                SendNetworkMessage(UserData.userName + " was killed by " + enemyName);
+
+
+
+            if (GetComponent<PhotonView>().isMine)
+            {
+                transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
+                transform.Find("HealthCrosshair").gameObject.SetActive(false);
+                GetComponent<FirstPersonController>().enabled = false;
+                GetComponent<PlayerMovement>().enabled = false;
+                GetComponent<NetworkCharacter>().enabled = false;
+                GetComponent<PlayerShoting>().enabled = false;
+                GetComponent<Health>().enabled = true;
+                StartCoroutine("DestroyPlay", 2f);
+            }
+
+            if (RespawnMe != null)
+                RespawnMe(3f);
         }
     }
 
-
-    void Death()
+    IEnumerator DestroyPlay(float time)
     {
-
-
-
-        playerNetworkChracter.GetComponent<PhotonView>().RPC("PlayerDies", PhotonTargets.All);
-
+       
         // Set the death flag so this function won't be called again.
         isDead = true;
 
@@ -102,49 +126,23 @@ public class Health : MonoBehaviour {
         //playerShooting.DisableEffects();
 
         // Tell the animator that the player is dead.
-        anim.SetBool("Die",true);
+        anim.SetBool("Die", true);
 
         // Set the audiosource to play the death clip and play it (this will stop the hurt sound from playing).
         playerAudio.clip = deathClip;
         playerAudio.Play();
-
-        // Turn off the movement and shooting scripts.
-        gameObject.transform.Find("FirstPersonCharacter").gameObject.SetActive(false);
-        gameObject.transform.Find("HealthCrosshair").gameObject.SetActive(false);
-        gameObject.GetComponent<FirstPersonController>().enabled = false;
-        gameObject.GetComponent<PlayerMovement>().enabled = false;
-        gameObject.GetComponent<NetworkCharacter>().enabled = false;
-        gameObject.GetComponent<PlayerShoting>().enabled = false;
-        gameObject.GetComponent<Health>().enabled = false;
-        
-        NetworkManager.standbyCamera.SetActive(true);
-
-
-        StartCoroutine("SetDeadOff");
-    }
-
-    IEnumerator SetDeadOff()
-    {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(time);
         anim.SetBool("Die", false);
-        Respawn();
-
+        PhotonNetwork.Destroy(gameObject);
     }
 
-    void Respawn()
-    {
-        playerNetworkChracter.GetComponent<PhotonView>().RPC("PlayerRespawns", PhotonTargets.All);
-
-        // Turn on the movement and shooting scripts.
-        gameObject.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
-        gameObject.transform.Find("HealthCrosshair").gameObject.SetActive(true);
-        gameObject.GetComponent<FirstPersonController>().enabled = true;
-        gameObject.GetComponent<PlayerMovement>().enabled = true;
-        gameObject.GetComponent<NetworkCharacter>().enabled = true;
-        gameObject.GetComponent<PlayerShoting>().enabled = true;
-        gameObject.GetComponent<Health>().enabled = true;
-
-        NetworkManager.standbyCamera.SetActive(false);
-    }
-
+   
 }
+
+   
+
+       
+
+ 
+
+

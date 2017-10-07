@@ -39,9 +39,12 @@ public class PlayerShoting : MonoBehaviour {
         {
             Debug.Log("we hit " + hitInfo.transform.name);
             Health h = hitInfo.transform.GetComponent<Health>();
-            playerAudio.clip = shotClip;
-            playerAudio.Play();
-            h.GetComponent<PhotonView>().RPC("TakeDamage",PhotonTargets.All,10);
+            if (h != null)
+            {
+                playerAudio.clip = shotClip;
+                playerAudio.Play();
+                h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, UserData.userName);
+            }
         }
 
         cooldown = fireRate;

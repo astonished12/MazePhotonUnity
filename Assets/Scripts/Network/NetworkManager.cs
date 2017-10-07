@@ -3,6 +3,7 @@ using System.Collections;
 using UnityStandardAssets.Characters.FirstPerson;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class NetworkManager : Photon.MonoBehaviour
 {
@@ -19,7 +20,11 @@ public class NetworkManager : Photon.MonoBehaviour
     public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
 
     private bool gamestart=false;
-    private Vector3 hiddenPosition = new Vector3(-200f, -200f, -200f);
+    Queue<string> messages= new Queue<string>();
+    const int messageCount = 6;
+    private Text messageWindow;
+
+
     //Map sync
     bool sent;
     int seed;
@@ -27,7 +32,8 @@ public class NetworkManager : Photon.MonoBehaviour
     private void Awake()
     {
         standbyCamera = GameObject.FindGameObjectWithTag("MainCamera");
-     }
+
+    }
     void Start()
     {
         Connect();
@@ -45,6 +51,8 @@ public class NetworkManager : Photon.MonoBehaviour
             PhotonNetwork.ConnectUsingSettings("v4.3");
         }
     }
+
+
     public GameObject worldGen;
 
 
@@ -74,7 +82,13 @@ public class NetworkManager : Photon.MonoBehaviour
         }
     }
 
-  
+    void StartSpawnProcess(float respawnTime)
+    {
+        //standbyCamera.SetActive(true);
+        StartCoroutine("SpawnPlayer", respawnTime);
+    }
+
+
 
     public static void CreateRoom(string roomName,int _maxPlayers,int sizeMaze)
     {
@@ -115,13 +129,12 @@ public class NetworkManager : Photon.MonoBehaviour
         }
 
     }
+   
 
-    IEnumerator GameIsReadyToPlay()
+
+    IEnumerator SpawnPlayer(float respawnTime)
     {
-       
-        //CREATE SPAWN POINTS
-        standbyCamera.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(respawnTime);
 
         Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0];
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
@@ -133,9 +146,44 @@ public class NetworkManager : Photon.MonoBehaviour
         myPlayer.GetComponent<PlayerShoting>().enabled = true;
         myPlayer.GetComponent<Health>().enabled = true;
 
+        myPlayer.GetComponent<Health>().RespawnMe += StartSpawnProcess;
+        myPlayer.GetComponent<Health>().SendNetworkMessage += AddMessage;
+
+
+
+
+        AddMessage("Spawned player: " + UserData.userName);
+
+    }
+
+
+    IEnumerator GameIsReadyToPlay()
+    {
+
+        GameObject temp = GameObject.Find("Network").gameObject.transform.GetChild(0).gameObject;
+        temp.SetActive(true);
+        SetMessages(temp);
+        
+        //CREATE SPAWN POINTS
+        standbyCamera.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+
+        StartCoroutine("SpawnPlayer", 0f);
+
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
             StartCoroutine(GenerateExitByCallingRpc());
+
+
     }
+
+
+
+
+    void SetMessages(GameObject temp)
+    {
+        messageWindow = temp.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<Text>();
+    }
+
 
 
     IEnumerator GenerateExitByCallingRpc()
@@ -145,23 +193,32 @@ public class NetworkManager : Photon.MonoBehaviour
 
     }
 
+    
+
+    void AddMessage(string message)
+    {
+        GetComponent<PhotonView>().RPC("AddMessage_RPC", PhotonTargets.All, message);
+    }
+
+
+
+    [PunRPC]
+    void AddMessage_RPC(string message)
+    {
+        messages.Enqueue(message);
+        if (messages.Count > messageCount)
+            messages.Dequeue();
+
+        messageWindow.text = "";
+        foreach (string m in messages)
+            messageWindow.text += m + "\n";
+    }
+
+
     [PunRPC]
     void GenerateExit(Vector3 initialSpawnPoint)
     {
         Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
     }
-
-    [PunRPC]
-    void PlayerDies()
-    {
-        transform.position = hiddenPosition;
-    }
-
-    [PunRPC]
-    void PlayerRespawns()
-    {
-        transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0]; 
-    }
-
 
 }
