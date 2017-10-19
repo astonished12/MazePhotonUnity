@@ -64,8 +64,8 @@ public class NetworkManager : Photon.MonoBehaviour
             // If i'm in a room, the master client, and i haven't already sent the seed
             sent = true;
             seed = Guid.NewGuid().GetHashCode();
-            worldGen.GetComponent<MazeGenerator>().realSeed = seed;
-            worldGen.GetComponent<MazeGenerator>().realSize = mapRoomNameSize[PhotonNetwork.room.Name];
+            MazeGenerator.realSeed = seed;
+            MazeGenerator.realSize = mapRoomNameSize[PhotonNetwork.room.Name];
 
             worldGen.GetComponent<PhotonView>().RPC("ReceiveSeed", PhotonTargets.OthersBuffered, seed);
             worldGen.GetComponent<PhotonView>().RPC("ReceiveSize", PhotonTargets.OthersBuffered, mapRoomNameSize[PhotonNetwork.room.Name]);
@@ -82,10 +82,9 @@ public class NetworkManager : Photon.MonoBehaviour
         }
     }
 
-    void StartSpawnProcess(float respawnTime)
+    void StartSpawnProcess(object[] parameters)
     {
-        //standbyCamera.SetActive(true);
-        StartCoroutine("SpawnPlayer", respawnTime);
+        StartCoroutine("SpawnPlayer", parameters);
     }
 
 
@@ -129,14 +128,16 @@ public class NetworkManager : Photon.MonoBehaviour
         }
 
     }
-   
 
-
-    IEnumerator SpawnPlayer(float respawnTime)
+    IEnumerator SpawnPlayer(object[] parameters)
     {
+
+
+        float respawnTime = (float) parameters[0];
+        int index = (int) parameters[1];
         yield return new WaitForSeconds(respawnTime);
 
-        Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0];
+        Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[index];
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
         myPlayer.transform.Find("HealthCrosshair").gameObject.SetActive(true);
@@ -168,13 +169,13 @@ public class NetworkManager : Photon.MonoBehaviour
         standbyCamera.SetActive(false);
         yield return new WaitForSeconds(0.5f);
 
-        StartCoroutine("SpawnPlayer", 0f);
+        object[] parameters = new object[2]{0f,0};
+        StartCoroutine("SpawnPlayer", parameters);
 
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
             StartCoroutine(GenerateExitByCallingRpc());
 
-
-    }
+      }
 
 
 
@@ -199,7 +200,6 @@ public class NetworkManager : Photon.MonoBehaviour
     {
         GetComponent<PhotonView>().RPC("AddMessage_RPC", PhotonTargets.All, message);
     }
-
 
 
     [PunRPC]

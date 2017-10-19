@@ -9,7 +9,7 @@ public class NetworkCharacter : Photon.PunBehaviour {
     private Vector3 hiddenPosition = new Vector3(-200f, -200f, -200f);
 
 
-    public delegate void Respawn(float time);
+    public delegate void Respawn(object[] parameters);
     public event Respawn RespawnMe;
     public delegate void SendMessageOnNetwork(string MessageOverlay);
     public event SendMessageOnNetwork SendNetworkMessage;

@@ -29,17 +29,19 @@ public class MazeGenerator : MonoBehaviour {
     }
 
     public GameObject masterClient;
-    public int realSeed;
-    public int realSize;
+    public static int realSeed;
+    public static int realSize;
+    private bool generatedMaze = false;
+
     void Update()
     {
-        if (PhotonNetwork.inRoom && realSeed != 0)
+        if (PhotonNetwork.inRoom && realSeed != 0 && !generatedMaze)
         { //Make sure you are connected and have received the seed
           //Generate world based off of the seed
             Height = realSize;
             Width = realSize;
             CreateMazeWallsByMatrix(Height,Width,realSeed);
-            realSeed = 0;
+            generatedMaze = true;
         }
     }
 

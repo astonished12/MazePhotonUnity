@@ -26,7 +26,7 @@ public class Health : MonoBehaviour {
     public bool damaged;                                               // True when the player gets damaged.
 
 
-    public delegate void Respawn(float time);
+    public delegate void Respawn(object[] parameters);
     public event Respawn RespawnMe;
     public delegate void SendMessageOverNetwork(string MessageOverlay);
     public event SendMessageOverNetwork SendNetworkMessage;
@@ -112,7 +112,11 @@ public class Health : MonoBehaviour {
             }
 
             if (RespawnMe != null)
-                RespawnMe(3f);
+            {
+                Random.InitState(MazeGenerator.realSeed);
+                object[] parmeters = new object[2]{2f,Random.Range(0,MazeGenerator.realSize*MazeGenerator.realSize)};
+                RespawnMe(parmeters);
+            }
         }
     }
 
