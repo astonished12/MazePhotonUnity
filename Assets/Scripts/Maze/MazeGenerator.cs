@@ -74,7 +74,7 @@ public class MazeGenerator : MonoBehaviour {
             {
                 myPostion = new Vector3(IntialPositonRoof.x + (i * wallLength), IntialPositonRoof.y, IntialPositonRoof.z + (j * wallLength));
                 //temp = Instantiate(WallRoof, myPostion, Quaternion.Euler(0f, 0f, 90f)) as GameObject;
-                Vector3 positonOnGround = new Vector3(myPostion.x, 2.3f, myPostion.z);
+                Vector3 positonOnGround = new Vector3(myPostion.x, 2.15f, myPostion.z);
                 cellsGroundPositionSpawn.Add(positonOnGround);
                 //temp.transform.parent = roof.transform;
             }

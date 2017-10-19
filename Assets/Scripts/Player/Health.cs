@@ -108,7 +108,7 @@ public class Health : MonoBehaviour {
                 GetComponent<NetworkCharacter>().enabled = false;
                 GetComponent<PlayerShoting>().enabled = false;
                 GetComponent<Health>().enabled = true;
-                StartCoroutine("DestroyPlay", 2f);
+                StartCoroutine("DestroyPlay", 1.5f);
             }
 
             if (RespawnMe != null)

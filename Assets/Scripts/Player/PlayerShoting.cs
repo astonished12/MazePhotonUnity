@@ -9,9 +9,12 @@ public class PlayerShoting : MonoBehaviour {
     private float cooldown = 0f;
     private AudioSource playerAudio;                                   // Reference to the AudioSource component.
     public AudioClip shotClip;
+    private Animator myAnimator;
     void Start()
     {
         playerAudio = GetComponent<AudioSource>();
+        myAnimator = GetComponent<Animator>();
+
     }
 
     void Update()
@@ -43,30 +46,41 @@ public class PlayerShoting : MonoBehaviour {
             {
                 playerAudio.clip = shotClip;
                 playerAudio.Play();
+                //myAnimator.SetBool("Shoot",true);
                 h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, UserData.userName);
+                //StartCoroutine("TurnOffShoot",0.5f);
             }
         }
 
         cooldown = fireRate;
     }
 
+    
+
     private RaycastHit FindClosetHitInfo(Ray ray)
-    {
-        RaycastHit[] raycasts = Physics.RaycastAll(ray);
-        float distance = 0f;
-        RaycastHit closet = new RaycastHit();
-
-        foreach (RaycastHit hit in raycasts)
         {
-            Debug.Log(hit.collider.gameObject.name+" "+hit.distance);
-            if (closet.collider == null||(hit.distance < distance)){
-                closet = hit;
-                distance = hit.distance;
-                
-            }
-        }
+            RaycastHit[] raycasts = Physics.RaycastAll(ray);
+            float distance = 0f;
+            RaycastHit closet = new RaycastHit();
 
-        return closet;
+            foreach (RaycastHit hit in raycasts)
+            {
+                Debug.Log(hit.collider.gameObject.name+" "+hit.distance);
+                if (closet.collider == null||(hit.distance < distance)){
+                    closet = hit;
+                    distance = hit.distance;
+                
+                }
+            }
+
+            return closet;
+    
+     }
+
+    private IEnumerator TurnOffShoot(float time)
+    {
+         yield return new WaitForSeconds(time);
+        myAnimator.SetBool("Shoot",false);
 
     }
 }

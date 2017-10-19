@@ -55,6 +55,8 @@ public class NetworkCharacter : Photon.PunBehaviour {
             photonStream.SendNext(myAnimator.GetBool("Jumping"));
             photonStream.SendNext(myAnimator.GetBool("Die"));
             photonStream.SendNext(myAnimator.GetBool("Respawn"));
+            //photonStream.SendNext(myAnimator.GetBool("Shoot"));
+
 
 
 
@@ -68,6 +70,7 @@ public class NetworkCharacter : Photon.PunBehaviour {
             myAnimator.SetBool("Jumping", (bool)photonStream.ReceiveNext());
             myAnimator.SetBool("Die", (bool)photonStream.ReceiveNext());
             myAnimator.SetBool("Respawn", (bool)photonStream.ReceiveNext());
+            //myAnimator.SetBool("Shoot", (bool)photonStream.ReceiveNext());
 
 
         }
