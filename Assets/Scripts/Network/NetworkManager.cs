@@ -12,13 +12,14 @@ public class NetworkManager : Photon.MonoBehaviour
     private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     public static RoomInfo[] roomsList;
     public GameObject player;
-    public  static GameObject standbyCamera;
+
+    public static GameObject standbyCamera;
     public GameObject exit;
     public GameObject waitPanel;
     private GameObject waitPanelInitilized;
     public bool offlinemode = false;
     public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
-
+    
     private bool gamestart=false;
     Queue<string> messages= new Queue<string>();
     const int messageCount = 6;
@@ -95,9 +96,11 @@ public class NetworkManager : Photon.MonoBehaviour
             Destroy(waitPanelInitilized);
             gamestart = true;
             StartCoroutine(GameIsReadyToPlay());
+
         }
         if (inmatch)
         {
+            WindowManager.checkNow = true;
             TimeRemaining -= Time.deltaTime;
             if (TimeRemaining <= 0)
             {
@@ -120,11 +123,13 @@ public class NetworkManager : Photon.MonoBehaviour
     public static void CreateRoom(string roomName,int _maxPlayers,int sizeMaze)
     {
         mapRoomNameSize.Add(roomName, sizeMaze);
+        PhotonNetwork.playerName = UserData.userName;
         PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = (byte)_maxPlayers, IsOpen = true, IsVisible = true, RealSize = sizeMaze }, lobbyName);
     }
 
     public static void JoinRoom(string roomName)
     {
+        PhotonNetwork.playerName = UserData.userName;
         PhotonNetwork.JoinRoom(roomName);
     }
          

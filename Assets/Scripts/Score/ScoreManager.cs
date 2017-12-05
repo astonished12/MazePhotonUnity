@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,12 +13,8 @@ public class ScoreManager : MonoBehaviour {
     Dictionary< string, Dictionary<string, int> > playerScores;
 
     int changeCounter = 0;
-
-    void Start()
-    {
-        DEBUG_INITIAL_SETUP();
-    }
-
+    
+   
     void Init() {
         if(playerScores != null)
             return;
@@ -78,23 +75,19 @@ public class ScoreManager : MonoBehaviour {
         return changeCounter;
     }
 
-    public void DEBUG_ADD_KILL_TO_QUILL() {
-        ChangeScore("quill18", "kills", 1);
-    }
+  
     
-    public void DEBUG_INITIAL_SETUP() {
-        SetScore("quill18", "kills", 0);
-        SetScore("quill18", "assists", 345);
-        
-        SetScore("bob", "kills", 1000);
-        SetScore("bob", "deaths", 14345);
-        
-        SetScore("AAAAAA", "kills", 3);
-        SetScore("BBBBBB", "kills", 2);
-        SetScore("CCCCCC", "kills", 1);
-        
-        
-        Debug.Log (  GetScore("quill18", "kills") );
+    public void InsertDataInScoreBoard() {
+
+
+        int playerListCount = PhotonNetwork.room.PlayerCount;
+
+        for (int i = 0; i < playerListCount; i++)
+        {
+            SetScore(PhotonNetwork.playerList[i].NickName, "kills", 0);
+            SetScore(PhotonNetwork.playerList[i].NickName, "assists", 0);
+        }
+       
     }
 
 }

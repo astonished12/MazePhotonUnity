@@ -24,7 +24,6 @@ public class NewRoomPanel : MonoBehaviour {
 
         playersNO = System.Int32.Parse(maxPlayers.GetComponent<InputField>().text.ToString());
         sizeLab = System.Int32.Parse(sizeMaze.GetComponent<InputField>().text.ToString());
-        Debug.Log(playersNO + " " + sizeLab);
         if (sizeLab % 2 == 1)
         {
             sizeLab++;
