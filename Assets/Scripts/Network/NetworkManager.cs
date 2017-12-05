@@ -22,7 +22,22 @@ public class NetworkManager : Photon.MonoBehaviour
     private bool gamestart=false;
     Queue<string> messages= new Queue<string>();
     const int messageCount = 6;
+
     private Text messageWindow;
+    private Text timeWindow;
+
+    //time stat
+
+    private float _timeRemaining;
+
+    public float TimeRemaining
+    {
+        get { return _timeRemaining; }
+        set { _timeRemaining = value; }
+    }
+
+    private float maxTime = 15 * 60; // In seconds.
+
 
 
     //Map sync
@@ -47,6 +62,7 @@ public class NetworkManager : Photon.MonoBehaviour
         }
         else
         {
+            TimeRemaining = maxTime;
             PhotonNetwork.ConnectUsingSettings("v4.3");
         }
     }
@@ -55,6 +71,7 @@ public class NetworkManager : Photon.MonoBehaviour
     public GameObject worldGen;
 
 
+    private bool inmatch = false;
     //TO DO ONE TIME ACTIVATION OF MASTER CLIENT MAZE GENERATION WHEN OTHER MASTER GOING OUT:))
     void Update()
     {
@@ -73,11 +90,23 @@ public class NetworkManager : Photon.MonoBehaviour
           
 
         }
-        if (PhotonNetwork.inRoom && PhotonNetwork.room.PlayerCount == PhotonNetwork.room.MaxPlayers && gamestart ==false)
+        if (PhotonNetwork.inRoom && PhotonNetwork.room.PlayerCount == PhotonNetwork.room.MaxPlayers && gamestart == false)
         {
             Destroy(waitPanelInitilized);
             gamestart = true;
             StartCoroutine(GameIsReadyToPlay());
+        }
+        if (inmatch)
+        {
+            TimeRemaining -= Time.deltaTime;
+            if (TimeRemaining <= 0)
+            {
+                //TO DO GAME OVER
+            }
+            else
+            {
+                UpdateTime(TimeRemaining);
+            }
         }
     }
 
@@ -174,7 +203,8 @@ public class NetworkManager : Photon.MonoBehaviour
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
             StartCoroutine(GenerateExitByCallingRpc());
 
-      }
+        inmatch = true;
+    }
 
 
 
@@ -182,6 +212,7 @@ public class NetworkManager : Photon.MonoBehaviour
     void SetMessages(GameObject temp)
     {
         messageWindow = temp.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<Text>();
+        timeWindow = temp.transform.GetChild(1).gameObject.transform.GetChild(0).GetComponent<Text>();
     }
 
 
@@ -193,7 +224,11 @@ public class NetworkManager : Photon.MonoBehaviour
 
     }
 
-    
+    void UpdateTime(float time)
+    {
+        GetComponent<PhotonView>().RPC("UpdateTime_RPC", PhotonTargets.All, time);
+
+    }
 
     void AddMessage(string message)
     {
@@ -213,6 +248,17 @@ public class NetworkManager : Photon.MonoBehaviour
             messageWindow.text += m + "\n";
     }
 
+
+    private string FormatTime(float timeInSeconds)
+    {
+        return string.Format("{0}:{1:00}", Mathf.FloorToInt(timeInSeconds / 60), Mathf.FloorToInt(timeInSeconds % 60));
+    }
+
+    [PunRPC]
+    void UpdateTime_RPC(float time)
+    {
+        timeWindow.text = FormatTime(time);
+    }
 
     [PunRPC]
     void GenerateExit(Vector3 initialSpawnPoint)
