@@ -5,6 +5,7 @@ using UnityEngine;
 public class Helper : Photon.MonoBehaviour {
 
     public GameObject helpPet;
+    public ParticleSystem muzzleFlash;
 
     [PunRPC]
     void SpawnHelper(Vector3 position)
@@ -14,5 +15,12 @@ public class Helper : Photon.MonoBehaviour {
       
     }
 
-   
+    [PunRPC]
+    void SpawnMuzzleFlash()
+    { 
+        muzzleFlash.Play();
+    }
+
+
+
 }

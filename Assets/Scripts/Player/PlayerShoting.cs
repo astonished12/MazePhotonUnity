@@ -10,6 +10,7 @@ public class PlayerShoting : MonoBehaviour {
     private AudioSource playerAudio;                                   // Reference to the AudioSource component.
     public AudioClip shotClip;
     private Animator myAnimator;
+
     void Start()
     {
         playerAudio = GetComponent<AudioSource>();
@@ -35,6 +36,12 @@ public class PlayerShoting : MonoBehaviour {
         }
 
         Debug.Log("Fire our gun");
+
+
+        GetComponent<PhotonView>().RPC("SpawnMuzzleFlash", PhotonTargets.All);
+        myAnimator.SetBool("Shoot", true);
+        StartCoroutine("TurnOffShoot", 0.1f);
+
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hitInfo;
         hitInfo = FindClosetHitInfo(ray);
@@ -46,9 +53,8 @@ public class PlayerShoting : MonoBehaviour {
             {
                 playerAudio.clip = shotClip;
                 playerAudio.Play();
-                //myAnimator.SetBool("Shoot",true);
+
                 h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, UserData.userName);
-                //StartCoroutine("TurnOffShoot",0.5f);
             }
         }
 
@@ -80,7 +86,7 @@ public class PlayerShoting : MonoBehaviour {
     private IEnumerator TurnOffShoot(float time)
     {
          yield return new WaitForSeconds(time);
-        myAnimator.SetBool("Shoot",false);
+         myAnimator.SetBool("Shoot",false);
 
     }
 }

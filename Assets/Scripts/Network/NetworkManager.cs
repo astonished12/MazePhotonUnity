@@ -32,7 +32,6 @@ public class NetworkManager : Photon.MonoBehaviour
     private void Awake()
     {
         standbyCamera = GameObject.FindGameObjectWithTag("MainCamera");
-
     }
     void Start()
     {

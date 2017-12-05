@@ -50,15 +50,12 @@ public class NetworkCharacter : Photon.PunBehaviour {
             //This is our player. We need to sned our actual positon to the network
             photonStream.SendNext(transform.position);
             photonStream.SendNext(transform.rotation);
-            
             photonStream.SendNext(myAnimator.GetFloat("Speed"));
             photonStream.SendNext(myAnimator.GetBool("Jumping"));
             photonStream.SendNext(myAnimator.GetBool("Die"));
             photonStream.SendNext(myAnimator.GetBool("Respawn"));
-            //photonStream.SendNext(myAnimator.GetBool("Shoot"));
-
-
-
+            photonStream.SendNext(myAnimator.GetBool("Shoot"));
+            
 
         }
         else //sau e altul
@@ -70,7 +67,7 @@ public class NetworkCharacter : Photon.PunBehaviour {
             myAnimator.SetBool("Jumping", (bool)photonStream.ReceiveNext());
             myAnimator.SetBool("Die", (bool)photonStream.ReceiveNext());
             myAnimator.SetBool("Respawn", (bool)photonStream.ReceiveNext());
-            //myAnimator.SetBool("Shoot", (bool)photonStream.ReceiveNext());
+            myAnimator.SetBool("Shoot", (bool)photonStream.ReceiveNext());
 
 
         }
