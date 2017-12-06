@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShoting : MonoBehaviour {
 
@@ -10,9 +11,13 @@ public class PlayerShoting : MonoBehaviour {
     private AudioSource playerAudio;                                   // Reference to the AudioSource component.
     public AudioClip shotClip;
     private Animator myAnimator;
+    private int startBullets=20;
+    private int currentBullets;
 
+    public Text bulletsStatus;
     void Start()
     {
+        currentBullets = startBullets;
         playerAudio = GetComponent<AudioSource>();
         myAnimator = GetComponent<Animator>();
 
@@ -21,6 +26,7 @@ public class PlayerShoting : MonoBehaviour {
     void Update()
     {
 
+        bulletsStatus.text = currentBullets + "/" + startBullets;
         cooldown -= Time.deltaTime;
         if (Input.GetButton("Fire1"))
         {
@@ -30,13 +36,13 @@ public class PlayerShoting : MonoBehaviour {
 
     private void Fire()
     {
-        if (cooldown > 0)
+        if (cooldown > 0 || currentBullets==0)
         {
             return;
         }
 
         Debug.Log("Fire our gun");
-
+        currentBullets -= 1;
 
         GetComponent<PhotonView>().RPC("SpawnMuzzleFlash", PhotonTargets.All);
         myAnimator.SetBool("Shoot", true);
