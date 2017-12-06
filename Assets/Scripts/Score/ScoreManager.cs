@@ -77,8 +77,8 @@ public class ScoreManager : MonoBehaviour {
 
   
     
-    public void InsertDataInScoreBoard() {
-
+    public void InsertDataInScoreBoard()
+    {
 
         int playerListCount = PhotonNetwork.room.PlayerCount;
 
@@ -87,7 +87,7 @@ public class ScoreManager : MonoBehaviour {
             SetScore(PhotonNetwork.playerList[i].NickName, "kills", 0);
             SetScore(PhotonNetwork.playerList[i].NickName, "assists", 0);
         }
-       
+        
     }
 
 }

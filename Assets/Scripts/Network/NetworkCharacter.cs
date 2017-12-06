@@ -33,8 +33,6 @@ public class NetworkCharacter : Photon.PunBehaviour {
             {
                 GetComponent<PhotonView>().RPC("SpawnHelper", PhotonTargets.All, transform.position);
             }
-          
-            
         }
         else
         {

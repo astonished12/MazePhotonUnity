@@ -20,6 +20,11 @@ public class NetworkManager : Photon.MonoBehaviour
     public bool offlinemode = false;
     public static Dictionary<string,int>  mapRoomNameSize = new Dictionary<string, int>();
     
+
+    //Tab
+    private ScoreManager scoreManager;
+
+    //Messages provided by spawn death 
     private bool gamestart=false;
     Queue<string> messages= new Queue<string>();
     const int messageCount = 6;
@@ -28,7 +33,6 @@ public class NetworkManager : Photon.MonoBehaviour
     private Text timeWindow;
 
     //time stat
-
     private float _timeRemaining;
 
     public float TimeRemaining
@@ -51,6 +55,7 @@ public class NetworkManager : Photon.MonoBehaviour
     }
     void Start()
     {
+        scoreManager = GameObject.Find("ScoreBoard").GetComponent<ScoreManager>();
         Connect();
     }
 
@@ -73,6 +78,7 @@ public class NetworkManager : Photon.MonoBehaviour
 
 
     private bool inmatch = false;
+
     //TO DO ONE TIME ACTIVATION OF MASTER CLIENT MAZE GENERATION WHEN OTHER MASTER GOING OUT:))
     void Update()
     {
@@ -96,8 +102,9 @@ public class NetworkManager : Photon.MonoBehaviour
             Destroy(waitPanelInitilized);
             gamestart = true;
             StartCoroutine(GameIsReadyToPlay());
-
+            scoreManager.InsertDataInScoreBoard();
         }
+
         if (inmatch)
         {
             WindowManager.checkNow = true;
@@ -110,6 +117,8 @@ public class NetworkManager : Photon.MonoBehaviour
             {
                 UpdateTime(TimeRemaining);
             }
+           
+
         }
     }
 

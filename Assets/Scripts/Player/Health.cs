@@ -31,6 +31,7 @@ public class Health : MonoBehaviour {
     public delegate void SendMessageOverNetwork(string MessageOverlay);
     public event SendMessageOverNetwork SendNetworkMessage;
 
+
     void Awake()
     {
         // Setting up the references.
@@ -70,9 +71,9 @@ public class Health : MonoBehaviour {
     {
         currentHealth = startingHealth;
         healthSlider.value = currentHealth;
-
-
     }
+
+
 
     [PunRPC]
     public void TakeDamage(int amount,string enemyName)
@@ -95,7 +96,10 @@ public class Health : MonoBehaviour {
             // ... it should die.
 
             if (SendNetworkMessage != null)
+            {
                 SendNetworkMessage(UserData.userName + " was killed by " + enemyName);
+                
+            }
 
 
 
@@ -108,6 +112,7 @@ public class Health : MonoBehaviour {
                 GetComponent<NetworkCharacter>().enabled = false;
                 GetComponent<PlayerShoting>().enabled = false;
                 GetComponent<Health>().enabled = true;
+                GetComponent<PhotonView>().RPC("ModifyBoard", PhotonTargets.All, UserData.userName, enemyName);
                 StartCoroutine("DestroyPlay", 1.5f);
             }
 
