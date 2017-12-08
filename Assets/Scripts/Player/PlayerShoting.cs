@@ -67,7 +67,11 @@ public class PlayerShoting : MonoBehaviour {
         cooldown = fireRate;
     }
 
-    
+    [PunRPC]
+    public void GiveBullets(int amount)
+    {
+        currentBullets = amount;
+    }
 
     private RaycastHit FindClosetHitInfo(Ray ray)
         {

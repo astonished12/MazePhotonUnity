@@ -73,7 +73,13 @@ public class Health : MonoBehaviour {
         healthSlider.value = currentHealth;
     }
 
+    [PunRPC]
+    public void GiveHealth(int amount)
+    {
+        currentHealth = amount;
+        healthSlider.value = currentHealth;
 
+    }
 
     [PunRPC]
     public void TakeDamage(int amount,string enemyName)
