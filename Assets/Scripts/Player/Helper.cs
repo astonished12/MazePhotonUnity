@@ -10,7 +10,7 @@ public class Helper : Photon.MonoBehaviour
     private ScoreManager scoreManager;
     void Start()
     {
-        scoreManager = GameObject.Find("ScoreBoard").GetComponent<ScoreManager>();
+      scoreManager = GameObject.Find("ScoreBoard").GetComponent<ScoreManager>();
     }
     [PunRPC]
     void SpawnHelper(Vector3 position)
@@ -33,4 +33,6 @@ public class Helper : Photon.MonoBehaviour
         scoreManager.ChangeScore(username1,"kills", 1);
         scoreManager.ChangeScore(username2, "deaths", 1);
     }
+
+
 }

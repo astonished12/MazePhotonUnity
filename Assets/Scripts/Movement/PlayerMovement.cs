@@ -63,4 +63,6 @@ public class PlayerMovement : Photon.PunBehaviour
 		distance.y = verticalVelocity * Time.deltaTime;
 		chContrl.Move(distance);
 	}
+
+   
 }

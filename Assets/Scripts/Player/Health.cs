@@ -111,6 +111,8 @@ public class Health : MonoBehaviour {
                 GetComponent<PlayerMovement>().enabled = false;
                 GetComponent<NetworkCharacter>().enabled = false;
                 GetComponent<PlayerShoting>().enabled = false;
+                GetComponent<PlayDetection>().enabled = false;
+
                 GetComponent<Health>().enabled = true;
                 GetComponent<PhotonView>().RPC("ModifyBoard", PhotonTargets.All, UserData.userName, enemyName);
                 StartCoroutine("DestroyPlay", 1.5f);

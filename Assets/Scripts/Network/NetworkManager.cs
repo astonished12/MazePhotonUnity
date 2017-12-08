@@ -12,6 +12,7 @@ public class NetworkManager : Photon.MonoBehaviour
     private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     public static RoomInfo[] roomsList;
     public GameObject player;
+    private GameObject exitGameObject;
 
     public static GameObject standbyCamera;
     public GameObject exit;
@@ -116,8 +117,9 @@ public class NetworkManager : Photon.MonoBehaviour
             else
             {
                 UpdateTime(TimeRemaining);
+
             }
-           
+
 
         }
     }
@@ -173,8 +175,6 @@ public class NetworkManager : Photon.MonoBehaviour
 
     IEnumerator SpawnPlayer(object[] parameters)
     {
-
-
         float respawnTime = (float) parameters[0];
         int index = (int) parameters[1];
         yield return new WaitForSeconds(respawnTime);
@@ -188,6 +188,7 @@ public class NetworkManager : Photon.MonoBehaviour
         myPlayer.GetComponent<NetworkCharacter>().enabled = true;
         myPlayer.GetComponent<PlayerShoting>().enabled = true;
         myPlayer.GetComponent<Health>().enabled = true;
+        myPlayer.GetComponent<PlayDetection>().enabled = true;
 
         myPlayer.GetComponent<Health>().RespawnMe += StartSpawnProcess;
         myPlayer.GetComponent<Health>().SendNetworkMessage += AddMessage;
@@ -268,6 +269,14 @@ public class NetworkManager : Photon.MonoBehaviour
         return string.Format("{0}:{1:00}", Mathf.FloorToInt(timeInSeconds / 60), Mathf.FloorToInt(timeInSeconds % 60));
     }
 
+
+    [PunRPC]
+    void ChangePosition(int randomPositionInMatrix)
+    {
+        Vector3 spawnPointPosition = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[randomPositionInMatrix];
+        exitGameObject.transform.position = spawnPointPosition;
+    }
+        
     [PunRPC]
     void UpdateTime_RPC(float time)
     {
@@ -277,7 +286,7 @@ public class NetworkManager : Photon.MonoBehaviour
     [PunRPC]
     void GenerateExit(Vector3 initialSpawnPoint)
     {
-        Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
+        exitGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
     }
 
 }
