@@ -44,7 +44,7 @@ public class NetworkManager : Photon.MonoBehaviour
         set { _timeRemaining = value; }
     }
 
-    private float maxTime = 1 * 10; // In seconds.
+    private float maxTime = 3 * 60; // In seconds.
 
 
 

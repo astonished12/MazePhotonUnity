@@ -56,4 +56,17 @@ public class HistoryManager : MonoBehaviour
            Destroy(matchList[matchname]);
         }
     }
+
+    private RectTransform rect;
+
+    public void OnDrag(UnityEngine.EventSystems.BaseEventData eventData)
+    {
+        var pointerData = eventData as UnityEngine.EventSystems.PointerEventData;
+        if (pointerData == null) { return; }
+
+        var currentPosition = rect.position;
+        currentPosition.x += pointerData.delta.x;
+        currentPosition.y += pointerData.delta.y;
+        rect.position = currentPosition;
+    }
 }
