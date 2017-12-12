@@ -20,7 +20,6 @@ public class FriendsManager : MonoBehaviour {
     private JSONParser myJsonParser;
     private void Start()
     {
-
         SocketIO = GameObject.Find("SetupSocketConnectionToGame").GetComponent<SocketIOComponent>();
         myJsonParser = new JSONParser();
         GameObject.Find("CanvasMenu").transform.GetChild(2).gameObject.transform.GetChild(1).GetComponent<Text>().text = "Welcome, " + UserData.userName;
@@ -39,7 +38,15 @@ public class FriendsManager : MonoBehaviour {
         SocketIO.On("listFriends", OnReceiveListFriends);
         SocketIO.On("friendPhoto", OnReceivePhotoFriend);
         SocketIO.On("removeFriend", OnRemoveFriend);
+        SocketIO.On("askfriends", OnAskFriends);
 
+    }
+
+    private void OnAskFriends(SocketIOEvent obj)
+    {
+        JSONObject temp = new JSONObject();
+        temp.AddField("username", UserData.userName);
+        SocketIO.Emit("GetMyFriends", temp);
     }
 
     private void OnReceivePhotoFriend(SocketIOEvent obj)

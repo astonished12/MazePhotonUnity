@@ -26,6 +26,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('removeFriend', onRemoveFriend);
 	socket.on('newPassword', onNewPassword);
 	socket.on('messageGlobalChat', onMessageGlobalChat);
+	socket.on('endroomgame', onEndRoomGame);
 });
 
 server.listen(process.env.PORT||3000);
@@ -241,4 +242,17 @@ var onMessageGlobalChat = function(data){
             name : data["destination"],
             message : data["message"]
         });
+}
+
+
+var onEndRoomGame = function(data){
+	   console.log(data);
+	   dbM.InsertDataIntoHistory(data["MyName"], data["KILLS"], data["DEATHS"],function(err){
+	   	 if(err)
+            console.log(err);
+        else
+        	console.log("succes insert on history");
+	   });
+
+       io.sockets.emit('askfriends');
 }

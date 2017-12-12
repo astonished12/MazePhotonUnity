@@ -152,15 +152,16 @@ var DbManager = function(){
         });
     }
 
-    this.InsertIntoStatistics = function(_playerId, _namePlayer, _oponentID, _nameOponent, _checkOwner, _status, _totalDamage,cb){
-        var newRowStatistics = { idPlayer: _playerId,namePlayer:_namePlayer, oponentId : _oponentID,nameOponent:_nameOponent, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
+    this.InsertDataIntoHistory = function(_name, _kills, _deaths, cb){
+        var newRowHistory = { myname: _name, kills:_kills, deaths: _deaths };
 
-        self.connection.query('INSERT INTO statistics SET ?', newRowStatistics, function(err){
+        self.connection.query('INSERT INTO history SET ?', newRowHistory, function(err){
                 if(err) {
-                cb(err);
+                     cb(err);
                 throw err;
             }
         });
+        
     }
 
      this.GetListMatchesById = function(myId, cb){

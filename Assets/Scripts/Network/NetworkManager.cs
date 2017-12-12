@@ -3,7 +3,9 @@ using System.Collections;
 using UnityStandardAssets.Characters.FirstPerson;
 using System;
 using System.Collections.Generic;
+using SocketIO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : Photon.MonoBehaviour
 {
@@ -42,7 +44,7 @@ public class NetworkManager : Photon.MonoBehaviour
         set { _timeRemaining = value; }
     }
 
-    private float maxTime = 15 * 60; // In seconds.
+    private float maxTime = 1 * 10; // In seconds.
 
 
 
@@ -50,12 +52,15 @@ public class NetworkManager : Photon.MonoBehaviour
     bool sent;
     int seed;
 
+    private SocketIOComponent SocketIO;
     private void Awake()
     {
         standbyCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
     void Start()
     {
+        SocketIO = GameObject.Find("SetupSocketConnectionToGame").GetComponent<SocketIOComponent>();
+
         scoreManager = GameObject.Find("ScoreBoard").GetComponent<ScoreManager>();
         Connect();
     }
@@ -113,11 +118,14 @@ public class NetworkManager : Photon.MonoBehaviour
             if (TimeRemaining <= 0)
             {
                 //TO DO GAME OVER
+                if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
+                {
+                    GetComponent<PhotonView>().RPC("EndGame", PhotonTargets.All);
+                }
             }
             else
             {
                 UpdateTime(TimeRemaining);
-
             }
 
 
@@ -289,4 +297,35 @@ public class NetworkManager : Photon.MonoBehaviour
         exitGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
     }
 
+    [PunRPC]
+    void EndGame()
+    {
+        //add jsonobject over stats and send to node server
+
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.player);
+        PhotonNetwork.LeaveRoom();
+        
+    }
+
+    void OnLeftRoom()
+    {
+        SocketIO.Emit("endroomgame", scoreToJsonObject(UserData.userName));
+        SceneManager.LoadScene(3);
+    }
+
+    JSONObject scoreToJsonObject(string yourname)
+    {
+        JSONObject temp = new JSONObject();
+        string[] names = scoreManager.GetPlayerNames("kills");
+        foreach (string name in names)
+        {
+            if (name == yourname)
+            {
+                temp.AddField("MyName",name);
+                temp.AddField("KILLS",scoreManager.GetScore(name, "kills").ToString());
+                temp.AddField("DEATHS",scoreManager.GetScore(name, "deaths").ToString());
+            }
+        }
+        return temp;
+    }
 }
