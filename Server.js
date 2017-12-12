@@ -27,6 +27,7 @@ io.sockets.on('connection', function(socket){
 	socket.on('newPassword', onNewPassword);
 	socket.on('messageGlobalChat', onMessageGlobalChat);
 	socket.on('endroomgame', onEndRoomGame);
+	socket.on('getMyHistory', onGetHistory);
 });
 
 server.listen(process.env.PORT||3000);
@@ -194,10 +195,7 @@ var onRemoveFriend = function(data){
     if(socketId!==-1){
         console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");        
         dbM.RemoveFriend(mapNameInGameIdDatabase[allPlayersLogged[this.id]], data["friendName"]);
-        /*this.emit("removeFriend",{
-            name: allPlayersLogged[socketId]
-        });*/
-
+     
         io.to(socketId).emit("removeFriend",{
             name: allPlayersLogged[this.id]
         });        
@@ -255,4 +253,20 @@ var onEndRoomGame = function(data){
 	   });
 
        io.sockets.emit('askfriends');
+}
+
+var onGetHistory = function(data){
+	var username = data.username;
+	var socketREF = this;
+	dbM.GetHistoryListByName(username,function(stats,rows){
+		if(stats==="noMatch"){
+			console.log("Nothing to send");
+		}
+		if(stats==="Matches"){
+			console.log("Trying to send");
+			 socketREF.emit("receiveHistoryList",{            
+		            history : rows
+		      });
+		}
+	});
 }

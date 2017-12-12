@@ -161,11 +161,12 @@ var DbManager = function(){
                 throw err;
             }
         });
-        
+
     }
 
-     this.GetListMatchesById = function(myId, cb){
-        this.connection.query('SELECT * FROM statistics where idPlayer = ?',myId, function(err, rows, fields) {
+
+     this.GetHistoryListByName = function(_name, cb){
+        this.connection.query('SELECT * FROM history where MyName = ?',_name, function(err, rows, fields) {
             if (err)
                 cb(err);
 
