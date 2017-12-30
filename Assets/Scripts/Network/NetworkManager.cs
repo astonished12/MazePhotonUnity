@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using SocketIO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class NetworkManager : Photon.MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class NetworkManager : Photon.MonoBehaviour
     private  static TypedLobby lobbyName = new TypedLobby("New_Lobby", LobbyType.Default);
     public static RoomInfo[] roomsList;
     public GameObject player;
+    public GameObject monsterAI;
     private GameObject exitGameObject;
 
     public static GameObject standbyCamera;
@@ -181,13 +183,24 @@ public class NetworkManager : Photon.MonoBehaviour
 
     }
 
+    private bool initSpawn = true;
     IEnumerator SpawnPlayer(object[] parameters)
     {
         float respawnTime = (float) parameters[0];
+        
         int index = (int) parameters[1];
         yield return new WaitForSeconds(respawnTime);
+        Vector3 initialSpawnPoint;
+        if (initSpawn)
+        {
+            initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[index]+new Vector3(0f,15f,0f);
+            initSpawn = false;
+        }
+        else
+        {
+            initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[index];
+        }
 
-        Vector3 initialSpawnPoint = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[index];
         GameObject myPlayer = PhotonNetwork.Instantiate(player.name, initialSpawnPoint, Quaternion.identity, 0); // spawneaza la toti
         myPlayer.transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
         myPlayer.transform.Find("HealthCrosshair").gameObject.SetActive(true);
@@ -220,11 +233,17 @@ public class NetworkManager : Photon.MonoBehaviour
         standbyCamera.SetActive(false);
         yield return new WaitForSeconds(0.5f);
 
-        object[] parameters = new object[2]{0f,0};
+
+        //Random.InitState(MazeGenerator.realSeed);
+        object[] parameters = new object[2] { 0f, /*UnityEngine.Random.Range(0, MazeGenerator.realSize * MazeGenerator.realSize)*/0 };
+
         StartCoroutine("SpawnPlayer", parameters);
 
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
+        {
             StartCoroutine(GenerateExitByCallingRpc());
+
+        }
 
         inmatch = true;
     }
@@ -243,7 +262,7 @@ public class NetworkManager : Photon.MonoBehaviour
     IEnumerator GenerateExitByCallingRpc()
     {
         yield return new WaitForSeconds(0.5f);
-        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
+        GetComponent<PhotonView>().RPC("GenerateExitAndMonsterAI", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
 
     }
 
@@ -292,9 +311,11 @@ public class NetworkManager : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    void GenerateExit(Vector3 initialSpawnPoint)
+    void GenerateExitAndMonsterAI(Vector3 initialSpawnPoint)
     {
         exitGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
+        GameObject tmp = Instantiate(monsterAI, initialSpawnPoint, Quaternion.identity) as GameObject;
+
     }
 
     [PunRPC]
@@ -307,6 +328,7 @@ public class NetworkManager : Photon.MonoBehaviour
         
     }
 
+  
     void OnLeftRoom()
     {
         SocketIO.Emit("endroomgame", scoreToJsonObject(UserData.userName));
