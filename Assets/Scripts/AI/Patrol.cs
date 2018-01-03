@@ -13,7 +13,9 @@ public class Patrol : Photon.MonoBehaviour
     private NavMeshAgent agent;
     private GameObject worldGen;
     private Animator anim;
-
+    private float minDistance = 0.1f;
+    private GameObject posibleTarget;
+    private bool waiting = false;
     void Awake()
     {
         worldGen = GameObject.Find("WorldGen").gameObject;
@@ -22,11 +24,12 @@ public class Patrol : Photon.MonoBehaviour
         points = new Transform[4];
         CreateReferencePoitns();
     }
+
     void Start()
     {
         if (PhotonNetwork.isMasterClient)
         {
-            GetComponent<PhotonView>().RPC("GoToNextPoint", PhotonTargets.All,0);
+            GetComponent<PhotonView>().RPC("GoToNextPoint", PhotonTargets.All, 0);
             GetComponent<PhotonView>().RPC("ChangeAnimToPatrol", PhotonTargets.All);
         }
     }
@@ -40,13 +43,16 @@ public class Patrol : Photon.MonoBehaviour
         leftUpperCorner.transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[0];
         GameObject rightUpperCorner = new GameObject();
         rightUpperCorner.name = "rightUpperCorner";
-        rightUpperCorner.transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width-1];
+        rightUpperCorner.transform.position =
+            worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width - 1];
         GameObject leftDownCorner = new GameObject();
         leftDownCorner.name = "leftDownCorner";
-        leftDownCorner.transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width*height-width];
+        leftDownCorner.transform.position =
+            worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width * height - width];
         GameObject rightDownCorner = new GameObject();
         rightDownCorner.name = "rightDownCorner";
-        rightDownCorner.transform.position = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width*height-1];
+        rightDownCorner.transform.position =
+            worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[width * height - 1];
 
         int k = 0;
         points[k++] = leftUpperCorner.transform;
@@ -56,16 +62,67 @@ public class Patrol : Photon.MonoBehaviour
 
     }
 
-  
+
     void Update()
     {
-        // Choose the next destination point when the agent gets
-        // close to the current one.
+        //if (PhotonNetwork.isMasterClient)
+            DetectEnemy();
+        
         if (agent.remainingDistance < 0.5f && PhotonNetwork.isMasterClient)
         {
             destPoint = (destPoint + 1) % points.Length;
             GetComponent<PhotonView>().RPC("GoToNextPoint", PhotonTargets.All, destPoint);
         }
+    }
+
+
+
+
+
+    Quaternion startingAngle = Quaternion.Euler(0,-180,0);
+    Quaternion stepAngle = Quaternion.AngleAxis(10, Vector3.up);
+    private RaycastHit hit;
+    
+    
+
+    void DetectEnemy()
+    {
+
+        var angle = transform.rotation * startingAngle;
+        var direction = angle * Vector3.forward;
+        var pos = transform.position;
+        for (var i = 0; i < 36; i++)
+        {
+            if (Physics.Raycast(pos, direction, out hit, 3f))
+            {
+                if(hit.collider.gameObject.CompareTag("Player"))
+                {
+                    posibleTarget = hit.collider.gameObject;
+                    break;
+                }
+            }
+            direction = stepAngle * direction;
+        }
+
+        for (var i = 0; i < 36; i++)
+        {
+            Debug.DrawRay(pos, direction, Color.red);
+            direction = stepAngle * direction;
+
+        }
+        if (posibleTarget && waiting==false)
+        {
+
+            waiting = true;
+            Debug.Log("TREBUIE SAL ATAC PE "+posibleTarget.name);
+            GetComponent<PhotonView>().RPC("Attack",PhotonTargets.All);
+        }
+
+    }
+
+    private float GetDistanceBetweenPositions(Vector3 start, Vector3 end)
+    {
+        return Mathf.Sqrt(Mathf.Pow((end.x - start.x), 2) + Mathf.Pow(end.y - start.y, 2));
     }
 
     [PunRPC]
@@ -77,12 +134,22 @@ public class Patrol : Photon.MonoBehaviour
     [PunRPC]
     public void ChangeAnimToPatrol()
     {
-        anim.SetBool("Patrol",true);
+        anim.SetBool("Patrol", true);
     }
-    
 
-   
-
+    [PunRPC]
+    public void Attack()
+    {
+        agent.Stop();
+        Health h = posibleTarget.gameObject.transform.GetComponent<Health>();
+        if (h != null)
+        {
+           h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, gameObject.name);
+        }
+        posibleTarget = null;
+        waiting = false;
+        agent.Resume();
+    }
 }
 
 
