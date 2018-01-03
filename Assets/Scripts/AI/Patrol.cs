@@ -1,31 +1,34 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
 
-public class Patrol : MonoBehaviour
+public class Patrol : Photon.MonoBehaviour
 {
 
     public Transform[] points;
     private int destPoint = 0;
     private NavMeshAgent agent;
     private GameObject worldGen;
+    private Animator anim;
 
-    void Start()
+    void Awake()
     {
         worldGen = GameObject.Find("WorldGen").gameObject;
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
         points = new Transform[4];
-
         CreateReferencePoitns();
-
-        // Disabling auto-braking allows for continuous movement
-        // between points (ie, the agent doesn't slow down as it
-        // approaches a destination point).
-        agent.autoBraking = false;
-        GotoNextPoint();
+    }
+    void Start()
+    {
+        if (PhotonNetwork.isMasterClient)
+        {
+            GetComponent<PhotonView>().RPC("GoToNextPoint", PhotonTargets.All,0);
+            GetComponent<PhotonView>().RPC("ChangeAnimToPatrol", PhotonTargets.All);
+        }
     }
 
     void CreateReferencePoitns()
@@ -53,27 +56,33 @@ public class Patrol : MonoBehaviour
 
     }
 
-    void GotoNextPoint()
-    {
-        // Returns if no points have been set up
-        if (points.Length == 0)
-            return;
-
-        // Set the agent to go to the currently selected destination.
-        agent.SetDestination(points[destPoint].position);
-
-        // Choose the next point in the array as the destination,
-        // cycling to the start if necessary.
-        destPoint = (destPoint + 1) % points.Length;
-    }
-
-
+  
     void Update()
     {
         // Choose the next destination point when the agent gets
         // close to the current one.
-        if (agent.remainingDistance < 0.5f)
-            GotoNextPoint();
+        if (agent.remainingDistance < 0.5f && PhotonNetwork.isMasterClient)
+        {
+            destPoint = (destPoint + 1) % points.Length;
+            GetComponent<PhotonView>().RPC("GoToNextPoint", PhotonTargets.All, destPoint);
+        }
     }
+
+    [PunRPC]
+    public void GoToNextPoint(int destPoint)
+    {
+        agent.SetDestination(points[destPoint].position);
+    }
+
+    [PunRPC]
+    public void ChangeAnimToPatrol()
+    {
+        anim.SetBool("Patrol",true);
+    }
+    
+
+   
+
 }
+
 

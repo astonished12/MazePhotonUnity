@@ -242,7 +242,7 @@ public class NetworkManager : Photon.MonoBehaviour
         if (PhotonNetwork.inRoom && PhotonNetwork.isMasterClient)
         {
             StartCoroutine(GenerateExitByCallingRpc());
-
+            GameObject tmp = PhotonNetwork.Instantiate(monsterAI.name, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count - 1], Quaternion.identity, 0);
         }
 
         inmatch = true;
@@ -262,7 +262,7 @@ public class NetworkManager : Photon.MonoBehaviour
     IEnumerator GenerateExitByCallingRpc()
     {
         yield return new WaitForSeconds(0.5f);
-        GetComponent<PhotonView>().RPC("GenerateExitAndMonsterAI", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
+        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
 
     }
 
@@ -311,11 +311,9 @@ public class NetworkManager : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    void GenerateExitAndMonsterAI(Vector3 initialSpawnPoint)
+    void GenerateExit(Vector3 initialSpawnPoint)
     {
         exitGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
-        GameObject tmp = Instantiate(monsterAI, initialSpawnPoint, Quaternion.identity) as GameObject;
-
     }
 
     [PunRPC]
