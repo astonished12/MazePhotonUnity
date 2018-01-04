@@ -14,6 +14,8 @@ public class Patrol : Photon.MonoBehaviour
     private GameObject worldGen;
     private Animator anim;
     private float minDistance = 0.1f;
+    private float lastAttackTime=0f;
+    private float aiAttackRate = 2f;
 
     private bool waiting = false;
     void Awake()
@@ -62,10 +64,14 @@ public class Patrol : Photon.MonoBehaviour
 
     }
 
+    private bool isReadyToAttackMinion()
+    {
+        return Time.time - lastAttackTime > aiAttackRate;
+    }
 
     void Update()
     {
-        //if (PhotonNetwork.isMasterClient)
+        if (PhotonNetwork.isMasterClient)
             DetectEnemy();
         
         if (agent.remainingDistance < 0.5f && PhotonNetwork.isMasterClient)
@@ -97,7 +103,6 @@ public class Patrol : Photon.MonoBehaviour
                 if(hit.collider.gameObject.CompareTag("Player"))
                 {
                     posibleTarget = hit.collider.gameObject;
-                    waiting = true;
                     break;
                 }
             }
@@ -110,11 +115,16 @@ public class Patrol : Photon.MonoBehaviour
             direction = stepAngle * direction;
 
         }
-        if (waiting==true)
+        if (waiting==false && posibleTarget)
         {
 
-            waiting = false;
-            GetComponent<PhotonView>().RPC("Attack",PhotonTargets.All);
+            Debug.Log(isReadyToAttackMinion());
+            if (isReadyToAttackMinion())
+            {
+                waiting = true;
+                GetComponent<PhotonView>().RPC("Attack",PhotonTargets.All);
+                lastAttackTime = Time.time;
+            }
         }
 
     }
@@ -140,17 +150,17 @@ public class Patrol : Photon.MonoBehaviour
     public void Attack()
     {
         agent.isStopped = true;
-        //Debug.Log(posibleTarget.collider.gameObject+" si "+posibleTarget.GetComponent<Health>());
         Health h;
-        if (!posibleTarget) return;
-        h = posibleTarget.transform.parent.GetComponent<Health>();
-
-        if (h != null)
+        if (posibleTarget)
         {
-            h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, gameObject.name);
+            h = posibleTarget.transform.parent.GetComponent<Health>();
+            if (h != null)
+            {
+                h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 50, gameObject.name);
+            }
+            posibleTarget = null;
+            waiting = false;
         }
-        posibleTarget = null;
-        waiting = false;
         agent.isStopped = false;
     }
 }
