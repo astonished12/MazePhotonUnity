@@ -14,7 +14,7 @@ public class Patrol : Photon.MonoBehaviour
     private GameObject worldGen;
     private Animator anim;
     private float minDistance = 0.1f;
-    private GameObject posibleTarget;
+
     private bool waiting = false;
     void Awake()
     {
@@ -82,8 +82,7 @@ public class Patrol : Photon.MonoBehaviour
     Quaternion startingAngle = Quaternion.Euler(0,-180,0);
     Quaternion stepAngle = Quaternion.AngleAxis(10, Vector3.up);
     private RaycastHit hit;
-    
-    
+    private GameObject posibleTarget;
 
     void DetectEnemy()
     {
@@ -98,6 +97,7 @@ public class Patrol : Photon.MonoBehaviour
                 if(hit.collider.gameObject.CompareTag("Player"))
                 {
                     posibleTarget = hit.collider.gameObject;
+                    waiting = true;
                     break;
                 }
             }
@@ -110,11 +110,10 @@ public class Patrol : Photon.MonoBehaviour
             direction = stepAngle * direction;
 
         }
-        if (posibleTarget && waiting==false)
+        if (waiting==true)
         {
 
-            waiting = true;
-            Debug.Log("TREBUIE SAL ATAC PE "+posibleTarget.name);
+            waiting = false;
             GetComponent<PhotonView>().RPC("Attack",PhotonTargets.All);
         }
 
@@ -140,15 +139,19 @@ public class Patrol : Photon.MonoBehaviour
     [PunRPC]
     public void Attack()
     {
-        agent.Stop();
-        Health h = posibleTarget.gameObject.transform.GetComponent<Health>();
+        agent.isStopped = true;
+        //Debug.Log(posibleTarget.collider.gameObject+" si "+posibleTarget.GetComponent<Health>());
+        Health h;
+        if (!posibleTarget) return;
+        h = posibleTarget.transform.parent.GetComponent<Health>();
+
         if (h != null)
         {
-           h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, gameObject.name);
+            h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 10, gameObject.name);
         }
         posibleTarget = null;
         waiting = false;
-        agent.Resume();
+        agent.isStopped = false;
     }
 }
 
