@@ -71,6 +71,11 @@ public class PlayerShoting : MonoBehaviour {
         cooldown = fireRate;
     }
 
+    public int returnNoCoins()
+    {
+        return currentCoins;
+    }
+
     [PunRPC]
     public void GiveBullets(int amount)
     {

@@ -150,14 +150,24 @@ public class Patrol : Photon.MonoBehaviour
     [PunRPC]
     public void Attack()
     {
+
         agent.isStopped = true;
         Health h;
+        PlayerShoting ps;
         if (posibleTarget)
         {
             h = posibleTarget.transform.parent.GetComponent<Health>();
+            ps = posibleTarget.transform.parent.GetComponent<PlayerShoting>();
             if (h != null)
             {
-                h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 50, gameObject.name);
+                if (ps.returnNoCoins() < 3)
+                {
+                    h.GetComponent<PhotonView>().RPC("TakeDamage", PhotonTargets.All, 50, gameObject.name);
+                }
+                else
+                {
+                    ps.GetComponent<PhotonView>().RPC("LoseCoins", PhotonTargets.All, 3);
+                }
             }
             posibleTarget = null;
             waiting = false;
