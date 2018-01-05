@@ -3,13 +3,9 @@
 public class PlayDetection : MonoBehaviour
 {
 
-    private float trackingRange = 1.5f;
+    private float trackingRange = 2f;
 
-    void Start()
-    {
-       // Random.InitState(MazeGenerator.realSize);
-
-    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -34,6 +30,15 @@ public class PlayDetection : MonoBehaviour
                 ps.GetComponent<PhotonView>().RPC("GiveBullets",PhotonTargets.All,20);
 
             }
+            else if (target != gameObject && target.CompareTag("Coin"))
+            {
+                int randomPositionInMatrix = UnityEngine.Random.Range(0, MazeGenerator.realSize * MazeGenerator.realSize);
+                GameObject.Find("Network").GetComponent<PhotonView>().RPC("ChangePositionCoins", PhotonTargets.All, randomPositionInMatrix);
+                var ps = GetComponent<PlayerShoting>();
+                ps.GetComponent<PhotonView>().RPC("GiveCoins", PhotonTargets.All, 3);
+
+            }
+            
         }
 
     }

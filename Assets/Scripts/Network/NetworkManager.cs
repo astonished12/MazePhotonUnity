@@ -16,7 +16,9 @@ public class NetworkManager : Photon.MonoBehaviour
     public static RoomInfo[] roomsList;
     public GameObject player;
     public GameObject monsterAI;
+    public GameObject coinS;
     private GameObject exitGameObject;
+    private GameObject coinsGameObject;
 
     public static GameObject standbyCamera;
     public GameObject exit;
@@ -262,7 +264,7 @@ public class NetworkManager : Photon.MonoBehaviour
     IEnumerator GenerateExitByCallingRpc()
     {
         yield return new WaitForSeconds(0.5f);
-        GetComponent<PhotonView>().RPC("GenerateExit", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
+        GetComponent<PhotonView>().RPC("GenerateExitAndCoin", PhotonTargets.All, worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn.Count-1]);
 
     }
 
@@ -303,7 +305,15 @@ public class NetworkManager : Photon.MonoBehaviour
         Vector3 spawnPointPosition = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[randomPositionInMatrix];
         exitGameObject.transform.position = spawnPointPosition;
     }
-        
+
+    [PunRPC]
+    void ChangePositionCoins(int randomPositionInMatrix)
+    {
+        Vector3 spawnPointPosition = worldGen.GetComponent<MazeGenerator>().cellsGroundPositionSpawn[randomPositionInMatrix];
+        coinsGameObject.transform.GetComponent<CoinFloat>().tempPos = spawnPointPosition;
+        coinsGameObject.transform.position = spawnPointPosition;
+    }
+
     [PunRPC]
     void UpdateTime_RPC(float time)
     {
@@ -311,10 +321,18 @@ public class NetworkManager : Photon.MonoBehaviour
     }
 
     [PunRPC]
-    void GenerateExit(Vector3 initialSpawnPoint)
+    void GenerateExitAndCoin(Vector3 initialSpawnPoint)
     {
         exitGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
+        coinsGameObject = Instantiate(coinS, initialSpawnPoint, exit.transform.rotation);
     }
+
+    [PunRPC]
+    void GenerateCoin(Vector3 initialSpawnPoint)
+    {
+        coinsGameObject = Instantiate(exit, initialSpawnPoint, exit.transform.rotation);
+    }
+
 
     [PunRPC]
     void EndGame()

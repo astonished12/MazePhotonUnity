@@ -13,11 +13,14 @@ public class PlayerShoting : MonoBehaviour {
     private Animator myAnimator;
     private int startBullets=20;
     private int currentBullets;
+    private int currentCoins;
 
     public Text bulletsStatus;
+    public Text coinsStatus;
     void Start()
     {
         currentBullets = startBullets;
+        currentCoins = 0;
         playerAudio = GetComponent<AudioSource>();
         myAnimator = GetComponent<Animator>();
 
@@ -27,6 +30,7 @@ public class PlayerShoting : MonoBehaviour {
     {
 
         bulletsStatus.text = currentBullets + "/" + startBullets;
+        coinsStatus.text = currentCoins+"@";
         cooldown -= Time.deltaTime;
         if (Input.GetButton("Fire1"))
         {
@@ -54,7 +58,7 @@ public class PlayerShoting : MonoBehaviour {
         if (hitInfo.collider != null)
         {
             Debug.Log("we hit " + hitInfo.transform.name);
-            Health h = hitInfo.transform.GetComponent<Health>();
+            Health h = hitInfo.transform.parent.GetComponent<Health>();
             if (h != null)
             {
                 playerAudio.clip = shotClip;
@@ -71,6 +75,18 @@ public class PlayerShoting : MonoBehaviour {
     public void GiveBullets(int amount)
     {
         currentBullets = amount;
+    }
+
+    [PunRPC]
+    public void GiveCoins(int amount)
+    {
+        currentCoins += amount;
+    }
+
+    [PunRPC]
+    public void LoseCoins(int amount)
+    {
+        currentCoins -= amount;
     }
 
     private RaycastHit FindClosetHitInfo(Ray ray)

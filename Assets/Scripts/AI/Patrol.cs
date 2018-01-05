@@ -15,7 +15,7 @@ public class Patrol : Photon.MonoBehaviour
     private Animator anim;
     private float minDistance = 0.1f;
     private float lastAttackTime=0f;
-    private float aiAttackRate = 2f;
+    private float aiAttackRate = 3f;
 
     private bool waiting = false;
     void Awake()
@@ -98,7 +98,7 @@ public class Patrol : Photon.MonoBehaviour
         var pos = transform.position;
         for (var i = 0; i < 36; i++)
         {
-            if (Physics.Raycast(pos, direction, out hit, 3f))
+            if (Physics.Raycast(pos, direction, out hit, 1.5f))
             {
                 if(hit.collider.gameObject.CompareTag("Player"))
                 {
@@ -146,6 +146,7 @@ public class Patrol : Photon.MonoBehaviour
         anim.SetBool("Patrol", true);
     }
 
+   
     [PunRPC]
     public void Attack()
     {
